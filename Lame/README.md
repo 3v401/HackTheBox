@@ -4,7 +4,7 @@
 2. Network fundamentals.
 
 
-### Beginning og the tutorial:
+### Beginning of the tutorial:
 
 We start with a IP check connection:
 
