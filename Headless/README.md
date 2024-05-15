@@ -109,3 +109,6 @@ echo "aXNfYWRtaW49SW1Ga2JXbHVJZy5kbXpEa1pORW02Q0swb3lMMWZiTS1TblhwSDA=" | base64
 The outcome is the decoded admin cookie:
 
 (pic14)
+
+
+
