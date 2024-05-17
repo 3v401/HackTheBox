@@ -43,30 +43,30 @@ Instead of trying common scripts in javascript to interact with the website and 
 ```
 gobuster dir -u http://10.10.11.8:5000 -w /usr/share/wordlists/dirb/big.txt
 ```
-gobuster uses the `dir` flag to scan for directories on the `-u` (url flag) on the domain specified using the `-w` worldlist flag located in `/usr/.../big.txt`. It can be observed that there are two available URLs `/dashboard` (Status:500, , i.e., Internal Server Error) and `/support` (Status: 200, i.e., OK). Our URL of interest is `/dashboard`. The reason why it isn't accessible can be because server configuration errors, resource limits... the most plausible situation is permission issues. It is highly likely that we don't have persmissions to access such URL so let's dig more into it.
+gobuster uses the `dir` (dir flag) to scan for directories on the `-u` (url flag) on the domain specified using the `-w` (worldlist flag) located in `/usr/.../big.txt`. It can be observed that there are two available URLs `/dashboard` (Status:500, , i.e., Internal Server Error) and `/support` (Status: 200, i.e., OK). Our URL of interest is `/dashboard` since the most plausible situation is that has permission issues. It is highly likely that we don't have persmissions to access such URL so let's dig more into it.
 
 (pic4)
 (pic5)
 
-So to access `http://10.10.11.8:5000/dashboard`we need to be able to login or have admin privileges. A good way to login is to find a login page (and use brute force for example or any additional hits in such login page). Nonetheless, we only have a non-accessible URL. There must be a way to bypass the server and make them think that we are authorized to access the URL. A good way to bypass/trick the server is to give an admin cookie or session id. The differences between admin cookie and session id can be seen in the following URL:
-https://www.tutorialspoint.com/What-is-the-difference-between-session-and-cookies#:~:text=Cookies%20are%20client-side%20files,files%20that%20store%20user%20information.&text=Cookies%20expire%20after%20the%20user,logs%20out%20of%20the%20program.
+To access `http://10.10.11.8:5000/dashboard`we need to be able to login or have admin privileges. Nonetheless, we only have a non-accessible URL (`/dashboard`) and accessible URL (`support`). There must be a way to bypass the server and make it think that we are authorized to access the (`/dashboard`) URL. A good way to bypass a server is to give it an admin cookie or session id. The differences between admin cookie and session id can be seen in the following  [link]([https://www.google.com](https://www.tutorialspoint.com/What-is-the-difference-between-session-and-cookies#:~:text=Cookies%20are%20client-side%20files,files%20that%20store%20user%20information.&text=Cookies%20expire%20after%20the%20user,logs%20out%20of%20the%20program.))
 
 (pic6)
 
-How can an admin cookie be obtained? A good way to obtain admin cookies is to use a XSS-steal cookie technique. An example can be found in the following URL:
-https://pswalia2u.medium.com/exploiting-xss-stealing-cookies-csrf-2325ec03136e
+How can an admin cookie be obtained? A good way to obtain admin cookies is to use a XSS-steal cookie technique. An example can be found in the following [link](https://pswalia2u.medium.com/exploiting-xss-stealing-cookies-csrf-2325ec03136e)
 
-Cross-Site Scripting (XSS) is a vulnerability that allows an attacker to inject malicious scripts into web pages. These scripts can run in the context of the victim's browser and can be used for a variety of malicious activities, including stealing cookies. Cookies often store session tokens and other sensitive information, and stealing them can allow an attacker to hijack a user's session, gaining unauthorized access to their account. So that's what we want to access the unauthorized URL `/dashboard`. When an XSS vulnerability is present on a website, an attacker can inject a script that reads the user's cookies and sends them to the attacker’s server. The attacker can then use these cookies to impersonate the user.
+#### XSS
+
+Cross-Site Scripting (XSS) is a vulnerability that allows an attacker to inject malicious scripts into web pages. These scripts can run in the victim's browser and can be used for a variety of malicious activities, including stealing cookies. Cookies often store session tokens and other sensitive information, and stealing them can allow an attacker to hijack a user's session, gaining unauthorized access to their account/web server. When an XSS vulnerability is present on a website, an attacker can inject a script that reads the user's cookies and sends them to the attacker’s server (i.e., our `server1` that we will set up now). The attacker can then use these cookies to impersonate the user.
 
 For this attack we need the following ingredients:
 
-1. Setting up a server
+1. Setting up a server (i.e., `server1`)
 2. Configure Burp-suite scanner
 3. Inject the malicious code
 
 ##### 1. Setting up the server
 
-The purpose of this step is to set up a server (let's call it server1) to receive the stolen cookie. Use a basic HTTP server on port 8001 that will log incoming requests. The server listens for incoming HTTP requests. In this attack, it will receive requests containing the victim's cookies. Type in a new CLI:
+The purpose of this step is to set up a server (`server1`) to receive the stolen cookie. Use a basic HTTP server on port 8001 (you can choose whichever port you want, but be consistent) that will log incoming requests. The server listens for incoming HTTP requests. In this attack, it will receive requests containing the victim's cookies. Type in a new CLI:
 
 ```
 python3 -m http.server 8001
