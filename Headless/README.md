@@ -195,3 +195,31 @@ chmod +x initdb.sh
 ```
 
 Being {IP} and {port} your IP and port (my port in this case will be 1212). Echo prints the payload that will be executed by the webserver to return a reverse shell to us. Second line is to make the file executable.
+
+The execution flow is the following:
+
+1. `Setup`: The attacker ensures they have a Netcat listener (1212) running on their machine to catch the reverse shell.
+2. `Malicious script insert`: The attacker places his crafted initdb.sh script in the directory where syscheck will be executed.
+3. `Execute syscheck`: When syscheck runs, it checks if initdb.sh is running. If it’s not, it attempts to start initdb.sh.
+4.  Reverse shell obtained.
+
+Open a new listener on the port you indicated in the payload in a new CL. On another commandline run again the `syscheck` file as follows:
+
+(pic22)
+
+You will see that you don't have root access. This is because the shell is not stabilized yet. When you get a reverse shell from a target machine, it often lacks the features and stability of a regular interactive shell. This means you may not have functionalities like command history, tab completion, or the ability to use certain keyboard shortcuts, which makes it challenging to work efficiently. Stabilizing the shell is the process of converting this basic shell into a more stable and functional interactive shell. To stabilize the shell you need:
+
+1. Target machine must have Python 2 or 3.
+2. import pty module and spawn bash shell: `python3 -c 'import pty;pty.spawn("/bin/bash")'`
+3. Press `CTRL + Z`to background process and get back to the host machine
+4. Use stty command to set terminal line settings and foreground back the target terminal: `stty raw -echo; fg`
+5. Set the terminal emulator to xterm: `export TERM=xterm`
+6. Press `Enter`
+
+You will access as root this time. The CLI is as follows:
+
+(pic23)
+
+Playing around among folders you will be able to find the root flag.
+
+(pic24)
