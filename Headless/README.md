@@ -12,9 +12,10 @@ nmap -sC -sV 10.10.11.8 -oN output_nmap.txt
 
 This command returns the output of nmap into `output_nmap.txt`file.
 
-`-sC`: Default Script Scan. Runs a set of standard nmap scripts at the target host (Checking for open proxy servers, identifying HTTP servers, detecting SSL/TLS certificate details... etc). This command adds depth to the scan by running various scripts that can uncover additional information and potential vulnerabilities.
+`-sC`: Default Script Scan. This flag runs a set of standard nmap scripts at the target host (10.10.11.8) to uncover additional information and potential vulnerabilities.
 
-`-sV`: Version Detection. Probes open ports to determine what service and version is running on them. It sends various probes to the open ports and analyzing the responses (e.g., Identifying application and version running on each open port). It ensures you get accurate service and version information for the open ports, which can be crucial for identifying specific vulnerabilities and understanding the network environment better.
+`-sV`: Version Detection. Probes open ports to determine what service and version is running on them (e.g., Identifying application and version running on each open port). It ensures you get accurate service and version information for the open ports, which can be crucial for identifying specific vulnerabilities and understanding the network environment better.
+
 Concatenating `-sC` and `-sV` in `nmap` scans is a common practice because it provides a detailed analysis of the target.
 
 The summary of the outcome is the following:
@@ -25,11 +26,13 @@ The summary of the outcome is the following:
    b. 5000/tcp: Web server
 3. Operating System: Linux
 
-The outcome shows that the open SSH service on port 22 and the web server on port 5000 might be targets for further investigation or exploitation.
+The outcome shows that SSH on port 22 and web server on port 5000 might be targets for further investigation or exploitation.
 
 ![Alt text](nmap_headless.png)
 
-As there is a webserver host. The most interesting way is to access from a browser `http://10.10.11.8:5000`. It automatically redirects to `http://10.10.11.8:5000/support`. We observe that the site is reachable and contains a form to send. Usually forms are good infection points which attackers can leverage to bypass systems or interact with them.
+SSH Typically requires valid credentials or a vulnerability in the SSH service for exploitation (I don't know about a vulnerability for OpenSSH 9.2p1 right now). Web servers often have multiple points of interaction and can be exploited easier if misconfigurations or vulnerabilities are found (We can try XSS, SQL injections, command injection...). The web application could expose sensitive information or have weak authentication methods.
+
+Let's access the webserver from a browser. Type in the search bar `http://10.10.11.8:5000`. It automatically redirects to `http://10.10.11.8:5000/support`. We observe that the site is reachable and contains a form to send. Usually forms are good infection points which attackers can leverage to bypass systems.
 
 (pic2)
 (pic3)
