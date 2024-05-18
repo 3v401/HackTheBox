@@ -8,6 +8,8 @@
 2. XSS, remote shell execution
 3. Stabilization terminal
 
+## Tutorial
+
 Start pinging the target IP:
 
 ```
@@ -66,7 +68,7 @@ To access `http://10.10.11.8:5000/dashboard`we need to be able to login or have 
 
 How can an admin cookie be obtained? A good way to obtain admin cookies is to use a XSS-steal cookie technique. An example can be found in the following [link](https://pswalia2u.medium.com/exploiting-xss-stealing-cookies-csrf-2325ec03136e)
 
-#### XSS
+### XSS
 
 Cross-Site Scripting (XSS) is a vulnerability that allows an attacker to inject malicious scripts into web pages. These scripts can run in the victim's browser and can be used for a variety of malicious activities, including stealing cookies. Cookies often store session tokens and other sensitive information, and stealing them can allow an attacker to hijack a user's session, gaining unauthorized access to their account/web server. When an XSS vulnerability is present on a website, an attacker can inject a script that reads the user's cookies and sends them to the attacker’s server (i.e., our `server1` that we will set up now). The attacker can then use these cookies to impersonate the user.
 
@@ -156,7 +158,7 @@ Make the payload executable with `chmod +x payload.sh`. The content of the paylo
 
 The IP address must be your IP address (mine is `10.10.14.108`) and the /1111 is the port we are going to set (you can set whichever you want to) for a netcat listener.
 
-#### Netcat
+### Netcat
 
 Netcat is a network tool for reading from (and writing to) network connections using TCP or UDP protocols. Some of its applications include:
 
