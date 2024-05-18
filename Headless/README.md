@@ -1,4 +1,4 @@
-![image](https://github.com/3v401/HackTheBox/assets/169607625/34ded9e3-002c-47c4-a13c-f3bcd9c70b81)Start pinging the target IP:
+Start pinging the target IP:
 
 ```
 ping 10.10.11.8
