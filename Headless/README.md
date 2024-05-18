@@ -1,3 +1,13 @@
+# Headless
+
+![Alt text](pic25.png)
+
+## Contents:
+
+1. Network fundamentals (nmap, burp-suite, netcat)
+2. XSS, remote shell execution
+3. Stabilization terminal
+
 Start pinging the target IP:
 
 ```
