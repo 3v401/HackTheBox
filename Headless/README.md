@@ -32,10 +32,9 @@ The outcome shows that SSH on port 22 and web server on port 5000 might be targe
 
 SSH Typically requires valid credentials or a vulnerability in the SSH service for exploitation (I don't know about a vulnerability for OpenSSH 9.2p1 right now). Web servers often have multiple points of interaction and can be exploited easier if misconfigurations or vulnerabilities are found (We can try XSS, SQL injections, command injection...). The web application could expose sensitive information or have weak authentication methods.
 
-Let's access the webserver from a browser. Type in the search bar `http://10.10.11.8:5000`. It automatically redirects to `http://10.10.11.8:5000/support`. We observe that the site is reachable and contains a form to send. Usually forms are good infection points which attackers can leverage to bypass systems.
+Let's access the webserver from a browser. Type in the search bar `http://10.10.11.8:5000`. Click on "For questions", it automatically redirects to `http://10.10.11.8:5000/support`. We observe that the site is reachable and contains a form to send. Usually forms are good infection points which attackers can leverage to bypass systems.
 
-(pic2)
-(pic3)
+![Alt text](pic3.png)
 
 Instead of trying common scripts in javascript to interact with the website and make them vulnerable. Let's scan what this domain has to offer. There is a famous tool in Kali Linux called `Gobuster`.
 
@@ -43,14 +42,17 @@ Instead of trying common scripts in javascript to interact with the website and 
 ```
 gobuster dir -u http://10.10.11.8:5000 -w /usr/share/wordlists/dirb/big.txt
 ```
-gobuster uses the `dir` (dir flag) to scan for directories on the `-u` (url flag) on the domain specified using the `-w` (worldlist flag) located in `/usr/.../big.txt`. It can be observed that there are two available URLs `/dashboard` (Status:500, , i.e., Internal Server Error) and `/support` (Status: 200, i.e., OK). Our URL of interest is `/dashboard` since the most plausible situation is that has permission issues. It is highly likely that we don't have persmissions to access such URL so let's dig more into it.
+gobuster uses the `dir` (dir flag) to scan for directories on the `-u` (url flag) on the domain specified using the `-w` (worldlist flag) located in `/usr/.../big.txt`. It can be observed that there are two available URLs `/dashboard` (Status:500, , i.e., Internal Server Error) and `/support` (Status: 200, i.e., OK).
 
-(pic4)
-(pic5)
+![Alt text](pic4.png)
+
+Our URL of interest is `/dashboard` since the most plausible situation is that has permission issues. It is highly likely that we don't have persmissions to access such URL so let's dig more into it.
+
+![Alt text](pic5.png)
 
 To access `http://10.10.11.8:5000/dashboard`we need to be able to login or have admin privileges. Nonetheless, we only have a non-accessible URL (`/dashboard`) and accessible URL (`support`). There must be a way to bypass the server and make it think that we are authorized to access the (`/dashboard`) URL. A good way to bypass a server is to give it an admin cookie or session id. The differences between admin cookie and session id can be seen in the following  [link]([https://www.google.com](https://www.tutorialspoint.com/What-is-the-difference-between-session-and-cookies#:~:text=Cookies%20are%20client-side%20files,files%20that%20store%20user%20information.&text=Cookies%20expire%20after%20the%20user,logs%20out%20of%20the%20program.))
 
-(pic6)
+![Alt text](pic6.png)
 
 How can an admin cookie be obtained? A good way to obtain admin cookies is to use a XSS-steal cookie technique. An example can be found in the following [link](https://pswalia2u.medium.com/exploiting-xss-stealing-cookies-csrf-2325ec03136e)
 
@@ -72,21 +74,21 @@ The purpose of this step is to set up a server (`server1`) to receive the stolen
 python3 -m http.server 8001
 ```
 
-(pic7)
+![Alt text](pic13.png)
 
 ##### 2. Configure Burp-suite scanner
 
 Open Burp-suite scanner. Click on "Temporary project in memory", "Next", "Use Burp defaults", "Start Burp". Click on `Proxy` tab, then on `ìntercept is off` to set it on. You will have an outcome as follows:
 
-(pic10)
+![Alt text](pic10.png)
 
 Click on "Open browser". A browser will appear on your left. This explorer is designed to interact with Burp-suite. We will use it for the XSS.
 
-(pic11)
+![Alt text](pic11.png)
 
 Type in the search bar `http://10.10.11.8:5000/support`. You will observe that the page is freezed. When Burp Suite's proxy is set to intercept HTTP requests, it captures each HTTP request sent by your browser before it reaches the target server. This allows you to review, modify, or drop the request before it is forwarded to the target server. Click on "Forward" button.
 
-(pic12)
+![Alt text](pic12.png)
 
 You will see that the URL is reached. Introduce some random data into the webpage. Submit. Check the outcome on the right-hand side. Burp-suite's right window is where you can play with the request/response information. Right-click on the request information and select "send to repeater" so we will be able to try multiple things without recatching the request several times. Now time to inject the payload. 
 
@@ -98,7 +100,7 @@ Observe the terms `{IP}:{port}`in the previous command line (CL). The CL is gene
 
 Introduce this CL into Burp-suite in `User-Agent` field and forward the communication. If no results appear add it too into the `message` field and click on forward.
 
-(pic8)
+![Alt text](pic9.png)
 
 You will receive the following outcome in your server CLI:
 
