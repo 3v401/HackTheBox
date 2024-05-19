@@ -1,6 +1,37 @@
-We know that Perfection webserver uses Ruby 3.0.2. So the webpage must be based on ruby.
+Let's start pinging:
 
+(pic1)
+
+Receives packets. Now let's start scanning the domain:
+
+(pic2)
+
+3 open ports. One ssh, http and http-alt. Let's analyze the http because it is a good way to start analyzing the webserver site. We begin by using gobuster to analyze the possible directories in the domain:
+
+(pic3)
+
+The URLs were analyzed and couldn't find any useful information on those URLs. Let's enter manually into the site:
+
+(pic6)
+
+The webpage is an interactive calculator. Visiting "About Us" and "Calculate your weighted grade" we find that there is a input section that interact with the site.
+
+(pic7)
+
+Let's get more information about this site to infere what kind of attacks is this site vulnerable to:
+
+(pic4)
+
+Observe that the site contains `Content-Type: text/html;charset=utf-8` and `Server: WEBrick/1.7.0 (Ruby/3.0.2/2021-07-07)`. So this developer must have used Ruby to develop the site. Let's analyze the content:
+
+(pic8)
+
+There are no clues that the frontend is running Ruby (no `<% %>/erb/ruby/rhtml` keywords). As far as the analysis can go, it seems a normal html site. Nonetheless, from the previous pictures we know that the server is using WEBrick 1.7.0, which is a Ruby-based web server. This must be specifying that the backend is running Ruby.
+
+Let's look on Google a bit of information by typing "server-side template injection ruby" to see if there is a way to inject malicious code. Checking on Github you can find "Ruby" section in this [link](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md#ruby:~:text=%5D).toArray())%20%7D%7D-,Ruby,-Ruby%20%2D%20Basic%20injections)
 The only way we have to introduce a payload into the webserver is through the interactive calculator. So let's play with it obbeying its requirements described at the bottom.
+
+
 
 Using burpsuite and analyzing the request. We can observe that we can introduce a payload into the webserver. Nonetheless, we must know that we cannot
 use the same payload technique we used in Headless because Perfection is based on Ruby.
