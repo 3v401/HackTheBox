@@ -91,6 +91,11 @@ The part `|+base64+-d+|+bash`in the injection payload is used to decode a base64
 3. The result is then sent to a second pipe `|` that takes the decoded output and passes it as input to the `bash` command.
 4. `bash` executes the input as a shell script
 
-The base64 string decodes into:
+Open burp-suite again. Fill some data into the burp-browser (with the intercept on) and submit it. You will see the request stopped on burp-suite. Right-click and select "send to repeater". Edit the request there and add the payload encoded. Click on "Send". Open the terminal where your netcat listener is open:
 
+(pic13)
+
+Bingo. You got access to the webserver application. Now playing around like I did in the previous picture you can get the user flag.
+
+#### Root flag
 
