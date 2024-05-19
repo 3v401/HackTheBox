@@ -29,17 +29,21 @@ Observe that the site contains `Content-Type: text/html;charset=utf-8` and `Serv
 There are no clues that the frontend is running Ruby (no `<% %>/erb/ruby/rhtml` keywords). As far as the analysis can go, it seems a normal html site. Nonetheless, from the previous pictures we know that the server is using WEBrick 1.7.0, which is a Ruby-based web server. This must be specifying that the backend is running Ruby.
 
 Let's look on Google a bit of information by typing "server-side template injection ruby" to see if there is a way to inject malicious code. Checking on Github you can find "Ruby" section in this [link](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md#ruby:~:text=%5D).toArray())%20%7D%7D-,Ruby,-Ruby%20%2D%20Basic%20injections)
-The only way we have to introduce a payload into the webserver is through the interactive calculator. So let's play with it obbeying its requirements described at the bottom.
 
+The only way we have to introduce a payload into the webserver is through the interactive calculator. So let's play with it obbeying its requirements described at the bottom. Using burpsuite and analyzing the request. We can observe that we can introduce a payload into the webserver. Nonetheless, we must know that we cannot use the same payload technique we used in Headless because Perfection is based on Ruby. Moreover, in one of the pictures we can observe that has XSS injection: Blocked. So instead of doing an XSS injection to get admin privileges, we are going to try to get a reverse shell to the Ruby webserver. The burpsuite analysis is the following:
 
+(pic9)
 
-Using burpsuite and analyzing the request. We can observe that we can introduce a payload into the webserver. Nonetheless, we must know that we cannot
-use the same payload technique we used in Headless because Perfection is based on Ruby.
+#### Thinking about the payload
 
-We know that the develper used a Ruby server template. So we search on Google: server-side template injection ruby
+Now comes the tricky part of this machine. What would be the correct payload (among the possible ones) for this server?
 
-We access the following URL and read the documentation. They have a specific case for ERB basic injection: https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md#ruby:~:text=ERB%3A-,%3C%25%3D%207%20*%207%20%25%3E,-Slim%3A
-They show the case `<%= 7 * 7 %>`.
+Reading the previous URL, we find they have a specific case for ERB basic injection: https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/README.md#ruby:~:text=ERB%3A-,%3C%25%3D%207%20*%207%20%25%3E,-Slim%3A
+What is an ERB in Ruby? ERB (Embedded Ruby) is a templating system built into Ruby that allows you to embed Ruby code directly into your text files, including HTML, XML, or even plain text documents.
+
+So, we know that the site uses html content, but the backend uses Ruby. So it is highly likely that the this ERB injection will work. We will embed an ERB command injection into the html site for the server to interpretate the command and get the reverse shell.
+
+In the URL they show the case `<%= 7 * 7 %>`.
 Nonetheless our goal is to inject a reverse shell into the Ruby webserver, not multiplying. So in Ruby terminology would be something of style:
 `<%= system("echo + payload");=>'.
 Also, we must know that the Ruby server only interpretates commands URL encoded. So both the payload and the command injection myst be URL encoded.
