@@ -127,11 +127,24 @@ Where `find /` starts the find command at the root directory. `-name "*susan*"` 
 
 (pic18)
 
-So the mask is {firstname}_{firstname backwards}_{randomly generated integer between 1 and 1,000,000,000}. All letters of the firstname should be in lowercase. Our target user is susan, so the mask would be `susan_nasus_?d?d?d?d?d?d?d?d?d`. What is `?d`? It represents a digit in hashcat command, and it is repeated ten times, indicating a nine-digit sequence because the integer &isin; (1-1,000,000,000). Run the following command in another terminal:
+So the mask is {firstname}_{firstname backwards}_{randomly generated integer between 1 and 1,000,000,000}. All letters of the firstname should be in lowercase. Our target user is susan, so the mask would be `susan_nasus_?d?d?d?d?d?d?d?d?d?d`. What is `?d`? It represents a digit in hashcat command, and it is repeated ten times, indicating a ten-digit sequence because the integer &isin; (1-1,000,000,000). Run the following command in another terminal:
+
+(pic18-1)
 
 While hashcat is trying to get the password, type `sudo -l` in your netcat listener. You will see that you can't request for sudo access. This is because the shell is not stabilized. Do the following (explained in Headless machine)
 
 (pic19)
 
-Now you can introduce the password. The result of hashcat is the following:
+Now you can introduce the password. Nonetheless, hashcat returned no results with our query:
+
+After 6 hours using hashcat, no results were found. This can be because of two reasons:
+
+1. We don't have enough information yet
+2. The command introduced is not correct and the susan email meant 9 numbers instead of 10.
+
+Let's run the same command with 9 numbers in the command. You will obtain the password for susan:
+
+(pic20)
+
+Introducing the password into sudo, it is easily obtained the root password:
 
