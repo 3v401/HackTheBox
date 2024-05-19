@@ -167,6 +167,6 @@ After 15 minutes (what a reduction) the hash is cracked:
 
 ![Alt text](pic21.png)
 
-Introducing the password into sudo, it is easily obtained the root password:
+Introducing the password into sudo, it is easily obtained the root flag:
 
 ![Alt text](pic22.png)
