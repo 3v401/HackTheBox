@@ -127,6 +127,11 @@ Where `find /` starts the find command at the root directory. `-name "*susan*"` 
 
 (pic18)
 
-So the mask is {firstname}_{firstname backwards}_{randomly generated integer between 1 and 1,000,000,000}. All letters of the firstname should be in lowercase. Our target user is susan, so the mask would be `susan_nasus_?d?d?d?d?d?d?d?d?d?d`. What is `?d`? It represents a digit in hashcat command, and it is repeated ten times, indicating a ten-digit sequence because the integer &isin; [1-1,000,000,000]. Run the following command in another terminal:
+So the mask is {firstname}_{firstname backwards}_{randomly generated integer between 1 and 1,000,000,000}. All letters of the firstname should be in lowercase. Our target user is susan, so the mask would be `susan_nasus_?d?d?d?d?d?d?d?d?d`. What is `?d`? It represents a digit in hashcat command, and it is repeated ten times, indicating a nine-digit sequence because the integer &isin; (1-1,000,000,000). Run the following command in another terminal:
 
+While hashcat is trying to get the password, type `sudo -l` in your netcat listener. You will see that you can't request for sudo access. This is because the shell is not stabilized. Do the following (explained in Headless machine)
+
+(pic19)
+
+Now you can introduce the password. The result of hashcat is the following:
 
