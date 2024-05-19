@@ -99,3 +99,4 @@ Bingo. You got access to the webserver application. Now playing around like I di
 
 #### Root flag
 
+After playing around with all the folders possible in the remote shell, the only interesting file found is the one located at `/home/susan/Migration`. The file is a `.db`. If you open it using cat you won't be able to appreciate the content correctly.
