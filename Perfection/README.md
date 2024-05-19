@@ -99,4 +99,34 @@ Bingo. You got access to the webserver application. Now playing around like I di
 
 #### Root flag
 
-After playing around with all the folders possible in the remote shell, the only interesting file found is the one located at `/home/susan/Migration`. The file is a `.db`. If you open it using cat you won't be able to appreciate the content correctly.
+After playing around with all the folders possible in the remote shell, the only interesting file found is the one located at `/home/susan/Migration`. The file is a `.db`. If you open it using cat you won't be able to appreciate the content correctly because the file is in binary format. Binary files contain not only text but also binary data that represents various non-printable characters and metadata necessary for the database engine to interpret the file correctly. The `strings` command is designed to extract and display printable text strings from binary files. Some example of .db files are SQLlite.db files.
+
+(pic15)
+
+This file contains the password for several users. The password we need is the Susan one because we are logged into `susan@perfection:~/Migration$`. A good way to decipher the password is to use hashcat.
+
+##### Hashcat
+
+Hashcat is an open-source password recovery tool used for recovering lost passwords. It is designed to crack password hashes through various attack methods like brute-force, dictionary, combinator and rule-based attacks.
+
+Grab this hash you found and in another terminal save it into a .txt file and run hashcat.
+
+(pic16)
+
+You will see that it takes too long and requests you for a mask for better performance. A `mask` refers to a string pattern used to generate password candidates during a brute-force attack. The mask specifies the structure of the passwords that hashcat will attempt to crack. Where can we obtain such mask? Let's do a deeper search on the webserver. Go to `cd ~` and run the following command: `find / -name "*mask*" -ls 2>dev/null`. You will get the following outcome:
+
+(pic17)
+
+There is an enormous amount of files that show the keyword "mask". Maybe this is a too generic word. Analyzing each of the files would be a nightmare. Also, the path and filename seem not to give any hints. Let's try with "*password*" and "*susan*". With "*password*" it will be the same, a huge number of files which do not show any meaningful information. When you run:
+
+```
+find / -name "*susan*" -ls 2>/dev/null
+```
+
+Where `find /` starts the find command at the root directory. `-name "*susan*"` searches with the pattern *susan*. `-type f` looks for files that has such *susan* keyword. `-ls` shows the path to (and more detailed information) of that file. `2>/dev/null` avoids showing error messages in the search (e.g., permission-denied errors). You will get three files. We saw two of them. Let's see this third one:
+
+(pic18)
+
+So the mask is {firstname}_{firstname backwards}_{randomly generated integer between 1 and 1,000,000,000}. All letters of the firstname should be in lowercase. Our target user is susan, so the mask would be `susan_nasus_?d?d?d?d?d?d?d?d?d?d`. What is `?d`? It represents a digit in hashcat command, and it is repeated ten times, indicating a ten-digit sequence because the integer &isin; [1-1,000,000,000]. Run the following command in another terminal:
+
+
