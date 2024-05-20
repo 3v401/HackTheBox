@@ -118,13 +118,11 @@ This file contains the password in hash format for several users. The password w
 
 #### Hashcat
 
-Hashcat is an open-source password recovery tool used for recovering lost passwords. It is designed to crack password hashes through various attack methods like brute-force, dictionary, combinator and rule-based attacks.
-
-Grab this hash you found and in another terminal save it into a .txt file and run hashcat.
+Hashcat is an open-source password recovery tool used for recovering lost passwords. It is designed to crack password hashes through various attack methods like brute-force, dictionary, combinator and rule-based attacks. Grab this hash from Susan you found and in another terminal save it into a .txt file and run hashcat.
 
 ![Alt text](pic16.png)
 
-You will see that it takes too long and requests you for a mask for better performance. A `mask` refers to a string pattern used to generate password candidates during a brute-force attack. The mask specifies the structure of the passwords that hashcat will attempt to crack. Where can we obtain such mask? Let's do a deeper search on the webserver. Go to `cd ~` and run the following command: `find / -name "*mask*" -ls 2>dev/null`. You will get the following outcome:
+You will see that it takes too long and requests you for a `mask` for better performance. A mask refers to a string pattern used to generate password candidates during a brute-force attack. The mask specifies the structure of the passwords that hashcat will attempt to crack. Where can we obtain such mask? Let's do a deeper search on the webserver. Go to `cd ~` and run the following command: `find / -name "*mask*" -ls 2>dev/null`. You will get the following outcome:
 
 ![Alt text](pic17.png)
 
@@ -148,14 +146,14 @@ While hashcat is trying to get the password, type `sudo -l` in your netcat liste
 
 Now you can introduce the password. Go back to hashcat. Nonetheless, hashcat returned no results with our query:
 
-![Alt text](pic18-1.png)
+![Alt text](pic24.png)
 
 After 6 hours using hashcat, no results were found. This can be because of two reasons:
 
 1. We don't have enough information yet
 2. The command introduced is not correct and the susan email meant 9 numbers instead of 10 (because it is up to 1*10⁹ digits and the sentence was not correctly specified mathematically).
 
-Let's run the same command with 9 numbers in the command. You will obtain the password for susan:
+Let's run the same command with 9 numbers instead. You will obtain the password for susan:
 
 ![Alt text](pic20.png)
 
