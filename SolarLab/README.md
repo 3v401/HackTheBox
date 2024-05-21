@@ -12,3 +12,20 @@ Observe that the open ports found with nmap where 80, 135, 139 and 445). Ports 1
 SMB can be a rich source of information if it is misconfigured, especially if shares are accessible to guest or unauthenticated users.
 Also access to SMB shares might provide a foothold into the system, allowing you to upload or download files. This can be used to plant further exploits or gather more data for privilege escalation.
 To install type `sudo apt install crackmapexec`.
+
+So, we don't have a username and password initially. A good way would be to try two attempts, one with username empty, and another with username "guest". If without username and password no results are obtained, it means anonymous access is not permitted on the target SMB servers. In that case, you would need some authentication/credentials to proceed further. `guest` is a usual keyword in Windows operating systems. It is designed to provide temporary and restricted access to the system without the need for a password. Many Windows systems have the guest account enabled by default, though with limited permissions. Other keywords like `administrator`, `system`, or `user` are usually secured with strong passwords due to security reasons. An annonymous attempt didn't show successful results, so a `guest` account was run. Type:
+
+```
+crackmapexec smb solarlab.htb -u Guest -p "" --shares
+```
+
+1. `crackmapexec` calls the tool.
+2. `smb` specifies the target service to test (SMB), a network file sharing protocol commonly used in Windows environments
+3. `solarlab.htb` Target host to scan
+4. `-u` user flag (guest)
+5. `-p` password flag (empty)
+6. `--shares` enumerate and display the shares available on the target SMB server
+
+This attempt succeeded in enumerating shares. The guest account, which often has limited access rights, was allowed to log in and read the share information.
+
+(pic4)
