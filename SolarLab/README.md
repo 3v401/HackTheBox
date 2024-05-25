@@ -42,3 +42,10 @@ Username: BlakeB
 Password: Thiscan...
 
 I chose this one because both Alexander and Claudia have the same structure in the "signa" accounts.
+
+
+Once logged in, click on Leave Request and fill the data.
+I tried a XSS attack like in Healess with no success.
+So I searched on Google: `ReportHub vulnerability Github`. On the second link you will find the following github publication:
+https://github.com/c53elyas/CVE-2023-33733
+
