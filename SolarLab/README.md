@@ -29,3 +29,16 @@ crackmapexec smb solarlab.htb -u Guest -p "" --shares
 This attempt succeeded in enumerating shares. The guest account, which often has limited access rights, was allowed to log in and read the share information.
 
 (pic4)
+
+-----------------------------------
+
+When downloading the files from the smb connection execute:
+
+sudo apt-get install libreoffice --fix-missing
+
+(I had many errors without --fix-missing)
+
+Username: BlakeB
+Password: Thiscan...
+
+I chose this one because both Alexander and Claudia have the same structure in the "signa" accounts.
