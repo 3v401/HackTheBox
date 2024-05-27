@@ -52,6 +52,8 @@ Bingo! We got inside. This is a more "thoughtful path" to get inside. Nonetheles
 
 Our goal is to find a username for Blake using the password from the excel. A good way to perform a brutte force login attack is with [Hydra](https://www.kali.org/tools/hydra/). 
 
+##### Hydra
+
 Hydra is a network login cracker. It is designed to perform brute-force attacks to guess passwords/usernames and gain unauthorized access to systems and services. Some of its key features are:
 
 1. `Multi-protocol support`: HTTP, HTTPS, FTP, SSH, SMTP, SNMP, Telnet and more.
@@ -61,10 +63,50 @@ Hydra is a network login cracker. It is designed to perform brute-force attacks 
 The command that we are going to use is:dra -L
 
 ```
-sudo hyDRA -L user2.txt -p ThisCanB3typedeasily1@ 10.10.11.16 -s 6791 http-post-form "/login:username=^USER^&PASSWORD=^pass^:F=User not found." -t64
+sudo hydra -L user2.txt -p ThisCanB3typedeasily1@ 10.10.11.16 -s 6791 http-post-form "/login:username=^USER^&PASSWORD=^pass^:F=User not found." -t64
 ```
 
 Where does this command come from? Well, to prepare it I read the documentation of the following github [link](https://github.com/gnebbia/hydra_notes) that explains some key features of Hydra and how to use it, and the second [link2](https://infinitelogins.com/2020/02/22/how-to-brute-force-websites-using-hydra/) that explained how to develop the command for your specific site. Because Hydra depends on which site you are at, remember, it is very `customizable`.
+
+Enter the site `report.solarlab.htb:6791/login`. Right-click and click on "Inspect" (I am using Firefox). Select the "Network" field in the inspection. Introduce some random test into the field. Click on "Login". You will see the following outcome.
+
+(pic13)
+
+Click on POST (200 means success). You will observe the following outcome
+
+(pic14)
+
+Now access the tab "Request" and activate "Raw". You will observe
+
+(pic15)
+
+The request payload we are looking for. Now we must let Hydra know if the login has been success or not. For that, we must take the characteristic text of the site when the introduced credentials are incorrect. In this case it is "User not found.". Now we have all we need to perform the brutte force attack. The structure is the following:
+
+`hydra -L {path/to/usernames_txt} -P {path/to/passwords_txt} {IP/DNS/Host target} -s {PORT} {type_of_request} "{URL:raw_request_payload:F=characteristic_text_failure}" -t {Threads}`
+
+1. `-L`: Takes the list of usernames to try to brutteforce. `-l` would be a manual introduction of just one user. It is the ^USER^-
+2. `-P`: Takes the list of passwords to try to brutteforce. `-p` would be a manual introduction of just one password. It is the ^PASS^.
+3. `-s`: Is the port to target the attack to
+4. `{type_of_request}`: Is the type of request to perform during the attack. In this case is `http-post-form` because we saw in the inspection that the method is a `POST` and the protocol being used is `HTTP`.
+5. `-t`: Number of threads to parallelize the attack.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 I chose this one because both Alexander and Claudia have the same structure in the "signa" accounts.
