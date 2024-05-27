@@ -95,7 +95,15 @@ So now Hydra command is ready. We need to create a text list of attempts for the
 ##### Crunch
 
 Crunch is a wordlist generator. It allows users to create custom wordlists tailored to specific requirements, which are often used in brute-force attacks, password recovery, and security testing. Crunch is highly configurable, supporting a wide range of options to define character sets, word lengths, patterns, and output formats. The command used in this case is:
+```
+crunch 5 7 BlakeByte -o user2.txt
+```
 
+This command generates a wordlist with a minimum length of 5 characters and a maximum of 7. `BlakeByte` is the character set to use for generating the words. `-o` is the output stored in a txt file.
+
+(pic11-1)
+
+Now all ingredients are ready. Let's run the command and see what it returns
 
 
 
