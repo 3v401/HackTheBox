@@ -90,6 +90,12 @@ The request payload we are looking for. Now we must let Hydra know if the login 
 4. `{type_of_request}`: Is the type of request to perform during the attack. In this case is `http-post-form` because we saw in the inspection that the method is a `POST` and the protocol being used is `HTTP`.
 5. `-t`: Number of threads to parallelize the attack.
 
+So now Hydra command is ready. We need to create a text list of attempts for the username. How do we do it? I found a tool called [Cruch](https://www.kali.org/tools/crunch/#:~:text=Crunch%20is%20a%20wordlist%20generator,of%20a%20set%20of%20characters.) looking for something that could help me to create many permutations in characters (I could do some data science to clean the dataset and use more "logical" usernames but we are in pentesting field so we are going to brutte force the complete list).
+
+##### Crunch
+
+Crunch is a wordlist generator. It allows users to create custom wordlists tailored to specific requirements, which are often used in brute-force attacks, password recovery, and security testing. Crunch is highly configurable, supporting a wide range of options to define character sets, word lengths, patterns, and output formats. The command used in this case is:
+
 
 
 
