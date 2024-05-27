@@ -133,10 +133,15 @@ Producer: ReportLab PDF Library. Permissions: -rw-r--r--. PDF Version: 1.4 (PDF 
 
 But, which payload should we insert? Observe that the title says "CODE INJECTION VULNERABILITY IN REPORTLAB PYTHON LIBRARY". This means that we can insert any code we want into the script. Our goal is to capture the flag, so always try to get a reverse shell. Let's prepare a rev shell for a Windows Machine (Headless and Perfection were Linux Machines, so this time the same reasoning won't work).
 
+There are many ways to create a revershell. Nonetheless, we will do the easiest this time. Go to [https://www.revshells.com/](https://www.revshells.com/). A site that creates reverse shells of all types. Select your IP and port. On the left, look for PowerShell #3 (Base64). Remember what we mentioned about Base64 when doing reveshell ([Perfection](https://github.com/3v401/HackTheBox/tree/main/Perfection))
 
+(pic18)
 
+Insert the payload into {YOUR_PAYLOAD_HERE}. Setup a netcat listener `nc -nvlp 7373`. Turn on the intercepter, generate the PDF. On the intercepted request, right-click and send it to the repeater. Insert the injection where the "telephone number" is (I checked on "test2" field and it didn't work, only there). Send request.
 
+(pic19)
 
+Bingo. We have access to Blake's account in the Windows Server.
 
 
 
