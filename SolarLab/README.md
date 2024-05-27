@@ -40,9 +40,9 @@ Username and password of the three members of SolarLab (Alexander, Claudia and B
 
 (explain how did you reason to find report.solarlab.htb_6791)
 
-Once you enter to `report.solarlab.htb:6791/login` you will access a login site. We know there must be an account for Alexander, Claudia and Blake. We start with Blake introducing `blake.byte` as username and `ThisCanB3...` as password. We get back `User not found.`. We try now with `AlexanderK`and `danenaci...` and we get `User authentication error`. Doing the same with ClaudiaS we get "User authentication error". So from here we infere that AlexanderK and ClaudiaS must exist as users, but we don't know their password (and doing a brutte force attack without hints/masks would take O(k^n) complexity.
+Once you enter to `report.solarlab.htb:6791/login` you will access a login site. We know there must be an account for Alexander, Claudia and Blake. We start with Blake introducing `blake.byte` as username and `ThisCanB3...` as password. We get back `User not found.`. We try now with `AlexanderK`and `danenaci...` and we get `User authentication error`. Doing the same with ClaudiaS we get "User authentication error". So from here we infere that AlexanderK and ClaudiaS must exist as users, but we don't know their password (and doing a brutte force attack without hints/masks to know their passwords would take O(k^n) complexity).
 
-The best option would be to attack Blake since there is a change that the password of that excel is the one for Blake in the solarlab report. Let's try that password with the same structure as the other users, i.e., user: `BlakeB` password: `ThisCanB3...`.
+The best option would be to attack Blake since there is a chance that the password of that excel is the one for Blake in the solarlab report. Let's try that password with the same structure as the other users, i.e., First Name + First Letter of Surname. Therefore user: `BlakeB` password: `ThisCanB3...`.
 
 (pic10)
 
@@ -50,6 +50,21 @@ Bingo! We got inside. This is a more "thoughtful path" to get inside. Nonetheles
 
 #### Alternative getting inside report.solarlab.htb
 
+Our goal is to find a username for Blake using the password from the excel. A good way to perform a brutte force login attack is with [Hydra](https://www.kali.org/tools/hydra/). 
+
+Hydra is a network login cracker. It is designed to perform brute-force attacks to guess passwords/usernames and gain unauthorized access to systems and services. Some of its key features are:
+
+1. `Multi-protocol support`: HTTP, HTTPS, FTP, SSH, SMTP, SNMP, Telnet and more.
+2. `Parallel attack capability`: Hydra can launch multiple parallel attacks using multiple threads speeding up the brute-force process
+3. `Customizable`: Users can specify custom login forms, failure conditions and other parameters.
+
+The command that we are going to use is:dra -L
+
+```
+sudo hyDRA -L user2.txt -p ThisCanB3typedeasily1@ 10.10.11.16 -s 6791 http-post-form "/login:username=^USER^&PASSWORD=^pass^:F=User not found." -t64
+```
+
+Where does this command come from? Well, to prepare it I read the documentation of the following github [link](https://github.com/gnebbia/hydra_notes) that explains some key features of Hydra and how to use it, and the second [link2](https://infinitelogins.com/2020/02/22/how-to-brute-force-websites-using-hydra/) that explained how to develop the command for your specific site. Because Hydra depends on which site you are at, remember, it is very `customizable`.
 
 
 I chose this one because both Alexander and Claudia have the same structure in the "signa" accounts.
