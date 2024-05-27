@@ -105,7 +105,11 @@ This command generates a wordlist with a minimum length of 5 characters and a ma
 
 Now all ingredients are ready. Let's run the command and see what it returns
 
+(pic16) (Find a good way to run Hydra with stop)
 
+The username is `BlakeB`and the password `ThisCanB3...`. Introduce the credentials into the site and you will get the following outcome:
+
+(pic10)
 
 
 
