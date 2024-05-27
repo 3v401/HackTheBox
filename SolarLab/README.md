@@ -32,14 +32,25 @@ This attempt succeeded in enumerating shares. The guest account, which often has
 
 -----------------------------------
 
-When downloading the files from the smb connection execute:
+When downloading the files from the smb connection I tried to open them with libreoffice. Nonetheless I wasn't able so I opened them with an online tool for xlsx (Search on Google "Open xlsx/docx file online" and pick the option you like the most). You will encounter that there is no meaningful information in the docx, only in the xlsx:
 
-sudo apt-get install libreoffice --fix-missing
+(pic7)
 
-(I had many errors without --fix-missing)
+Username and password of the three members of SolarLab (Alexander, Claudia and Blake) for the sited Fidelity, Signa and unknown.
 
-Username: BlakeB
-Password: Thiscan...
+(explain how did you reason to find report.solarlab.htb_6791)
+
+Once you enter to `report.solarlab.htb:6791/login` you will access a login site. We know there must be an account for Alexander, Claudia and Blake. We start with Blake introducing `blake.byte` as username and `ThisCanB3...` as password. We get back `User not found.`. We try now with `AlexanderK`and `danenaci...` and we get `User authentication error`. Doing the same with ClaudiaS we get "User authentication error". So from here we infere that AlexanderK and ClaudiaS must exist as users, but we don't know their password (and doing a brutte force attack without hints/masks would take O(k^n) complexity.
+
+The best option would be to attack Blake since there is a change that the password of that excel is the one for Blake in the solarlab report. Let's try that password with the same structure as the other users, i.e., user: `BlakeB` password: `ThisCanB3...`.
+
+(pic10)
+
+Bingo! We got inside. This is a more "thoughtful path" to get inside. Nonetheless, in real life it is not commong to be like that. So we will use a more realistic scenario (to get inside)
+
+#### Alternative getting inside report.solarlab.htb
+
+
 
 I chose this one because both Alexander and Claudia have the same structure in the "signa" accounts.
 
