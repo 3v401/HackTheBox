@@ -21,7 +21,7 @@ Before scrolling and visiting sections, we have to detect the software version t
 
 ?When you access the webpage at http://10.10.11.8:8080 on your Linux server and see that it uses Jenkins, it means that Jenkins is installed and running on your server. The Jenkins web interface is being served on port 8080, allowing you to interact with Jenkins through your web browser.?
 
-? This interface is where you can configure jobs, manage plugins, and monitor the status of builds and deployments.?
+?This interface is where you can configure jobs, manage plugins, and monitor the status of builds and deployments.?
 
 So let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find the following url:
 https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314
