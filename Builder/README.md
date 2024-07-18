@@ -31,7 +31,7 @@ Nonetheless, we don' t find any example of how to implement it. So let's look on
 
 
 
-But how to get a client jenkins-cli.jar? Let' s type on google: "download the client jenkins-cli.jar" and select the Jenkins wiki. You will observe the following statement:
+But how to get a client jenkins-cli.jar? Let' s type on google: "download the client jenkins-cli.jar" and select the Jenkins wiki (https://wiki.jenkins.io/JENKINS/Jenkins-CLI.html). You will observe the following statement:
 
 (pic4)
 
