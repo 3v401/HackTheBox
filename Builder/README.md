@@ -18,8 +18,23 @@ The HTTP-server-header reveals the server software used (Jetty 10.0.8). Let's en
 (pic2)
 
 Before scrolling and visiting sections, we have to detect the software version that the site is built on. We see that it is Kenkins 2.441. So let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find two urls:
-1. From nist.gov:
-2. From GitHub:
+1. From nist.gov: https://nvd.nist.gov/vuln/detail/CVE-2024-23897
+2. From GitHub: https://github.com/advisories/GHSA-6f9g-cxwr-q5jr
 
-3. 
+Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897
 
+
+
+
+
+
+
+
+
+But how to get a client jenkins-cli.jar? Let' s type on google: "download the client jenkins-cli.jar" and select the Jenkins wiki. You will observe the following statement:
+
+(pic4)
+
+So what we have to do is to connect to the jenkins server and add the additional URL to download:
+
+(pic3)
