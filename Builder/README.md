@@ -19,15 +19,17 @@ The HTTP-server-header reveals the server software used (Jetty 10.0.8). Let's en
 
 Before scrolling and visiting sections, we have to detect the software version that the site is built on. We see that it is Jenkins 2.441.
 
-?When you access the webpage at http://10.10.11.8:8080 on your Linux server and see that it uses Jenkins, it means that Jenkins is installed and running on your server. The Jenkins web interface is being served on port 8080, allowing you to interact with Jenkins through your web browser.?
+#### Jenkins
 
-?This interface is where you can configure jobs, manage plugins, and monitor the status of builds and deployments.?
+Jenkins is a tool for automating the software development process, from code integration and testing to deployment. Its extensibility and integration capabilities make it a popular choice for teams practicing DevOps and agile methodologies.
 
-So let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find the following url:
-https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314
+When you access the webpage at `http://10.10.11.8:8080` on your Linux server and see that it uses Jenkins, it means that Jenkins is installed and running on that server. The Jenkins web interface is being served on port 8080, allowing you to interact with Jenkins through your web browser.
+
+So, if you can interact with Jenkins to the server, let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find the following [URL](https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314)
+
 RCE stands for Remote Code Execution.
 
-?Jenkins is a versatile and powerful tool for automating the software development process, from code integration and testing to deployment. Its extensibility and integration capabilities make it a popular choice for teams practicing DevOps and agile methodologies.?
+
    
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
 
