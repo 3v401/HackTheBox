@@ -21,16 +21,38 @@ Before scrolling and visiting sections, we have to detect the software version t
 
 #### Jenkins
 
-Jenkins is a tool for automating the software development process, from code integration and testing to deployment. Its extensibility and integration capabilities make it a popular choice for teams practicing DevOps and agile methodologies.
+[Jenkins](https://en.wikipedia.org/wiki/Jenkins_(software)) is a tool for automating the software development process, from code integration and testing to deployment. Its extensibility and integration capabilities make it a popular choice for teams practicing DevOps and agile methodologies.
 
 When you access the webpage at `http://10.10.11.8:8080` on your Linux server and see that it uses Jenkins, it means that Jenkins is installed and running on that server. The Jenkins web interface is being served on port 8080, allowing you to interact with Jenkins through your web browser.
 
 So, if you can interact with Jenkins to the server, let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find the following [URL](https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314)
 
-RCE stands for Remote Code Execution.
+`Arbitrary file read vulnerability through the CLI can lead to RCE`. RCE stands for Remote Code Execution.
+It states that Jenkins has a built-in command line interface (CLI) to access Jenkins from a script or shell environment. Jenkins uses the `args4j` library to parse command arguments and options on the Jenkins controller when processing CLI commands. This command parser has a feature that replaces an `@` character followed by a file path in an argument with the file’s contents (`expandAtFiles`). This feature is enabled by default and Jenkins 2.441 and earlier, LTS 2.426.2 and earlier does not disable it.
+
+So, how do we get a Jenkins CLI? Typing on Google `get jenkins cli` we access the Jenkins documentation, read the description and access to section [Downloading the client](https://www.jenkins.io/doc/book/managing/cli/#downloading-the-client), which is what we want to interact with the server.
+
+The documentation states that the CLI client can be downloaded directly from a Jenkins controller at the URL /jnlpJars/jenkins-cli.jar, in effect `JENKINS_URL/jnlpJars/jenkins-cli.jar`. So we connect to the host server and introduce such URL:
+
+(pic3)
+
+Now that we have the Jenkins-CLI, how do we use Jenkins-CLI? How do we insert the payload into the webserver?
+
+##### How to use Jenkins-CLI
+
+##### How to insert Payload into Jenkins 2.441
+
+Searching `CVE-2024-23897 PoC` we find the following Splunk [site](https://www.splunk.com/en_us/blog/security/security-insights-jenkins-cve-2024-23897-rce.html).
+Reading the section `Payload Body Explanation` we can observe the payload structure as:
+
+`[Command Length][Command ('help')][File Path Length][File Path ('@/etc/passwd')][Other Parameters]`
 
 
-   
+```
+java -jar jenkins-cli.jar -s http://<JENKINS_SERVER>:8080 help "@/etc/passwd"
+```
+
+
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
 
 
