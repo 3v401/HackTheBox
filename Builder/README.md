@@ -198,9 +198,21 @@ If you want to get the script you can get it in the repository for Builder. The 
 ```
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' connect-node "@/var/jenkins_home/users/users.xml"
 ```
+(pic21)
 
-Maybe using others it works. Let' s try: s URL, webSocket, http, ssh, i KEY, noCertificateCheck...
+We got the username of our target Jenkins Docker!
 
+So, there must be a user called `jennifer_12108429903186576833`. Let's search for it the same way we searched for `kali_XXXX`.
+
+(pic22)
+
+As expected, we found the same file in the same location. The developer didn' t change the path. Everything remained as efault.
+
+1. email address: `jennifer@builder.htb`
+2. seed: `6841d11dc1de101d`
+3. The hashed password: #jbcrypt `$2a$10$UwR7BpEH.ccfpi1tv6w/XuBtS44S7oUpR2JYiobqxcDQJeN/L4l1a`
+
+We can decipher the password quickly with John the Ripper:
 
 
 Let's try to get the same file from our target Jenkins Docker host. Open a terminal and type:
