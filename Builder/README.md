@@ -171,6 +171,13 @@ These files are usually for:
 
 What is this? Well, first we must know a bit about .xml files. The first line specifies the XML version and character encoding. Third line the version of the user ID mapping format. The next part is the ID to Directory Name Map (Maps user IDs to their corresponding directory names), for example, here, the file is used by Jenkins to map user ID "kali" to a unique directory name for storing user-specific data (kali_5195686553352608093).
 
+So there must be a directory "kali_XXXX". We access the location of `users.xml` and observe that effectively, there was a folder with such name. Let's see its contents.
+
+(pic18)
+
+The `config.xml` file in Jenkins for the user "kali" holds detailed configuration information for that specific user. It includes the user’s ID and full name, as well as various properties and settings. These properties manage user preferences. It also contains user-specific security details like the encrypted password and API tokens.
+
+The password stored in this file is encrypted using bcrypt, a hashing algorithm designed to securely hash passwords. This ensures that even if someone gains access to the config.xml file, they cannot easily retrieve the plaintext password. Nonetheless, we can easily decrypt it. Th
 
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
 
