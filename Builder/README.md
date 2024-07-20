@@ -153,8 +153,23 @@ Now open a new terminal and run the following commands:
 
 1. `sudo docker ps -a`: To list all containers (running or not).
 2. `sudo start 4e`: To start the Docker container that beggins with 4e (yours will be different. Check your list of containers with the prevous command.
-3. `sudo docker exec 0it 4e bash`: Opens a terminal inside the running container that starts with 4e ID.
+3. `sudo docker exec -it 4e bash`: Opens a terminal inside the running container that starts with 4e ID.
 
+(pic15)
+
+At this point we must start thinking, what do we want? Obtaining the root flag. What do we aim for? The sudo password. Where can we find such sudo password? We know that in my docker container, the sudo password is `15a01c1cb3ce4abab9cc6e7976882c5d`. So it would be desirable to find a file that contains information `user:password`. These kind of files are usually named with the keyword "user, root, password...". I only show the first one:
+
+(pic16)
+
+These files are usually for:
+1. user.svg, new-user.svg, computer-user-offline.svg: Icon or image files used in the Jenkins web interface.
+2. users.xml: Configuration or data file that stores user information for Jenkins.
+
+`.xml` files are used for: Data storage, configuration, data exchange or document formatting. In Jenkins, .xml files often store configuration settings, user data, and job definitions. Let' s open users.xml
+
+(pic17)
+
+What is this? Well, first we must know a bit about .xml files. The first line specifies the XML version and character encoding. Third line the version of the user ID mapping format. The next part is the ID to Directory Name Map (Maps user IDs to their corresponding directory names), for example, here, the file is used by Jenkins to map user ID "kali" to a unique directory name for storing user-specific data (kali_5195686553352608093).
 
 
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
