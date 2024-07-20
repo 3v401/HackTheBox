@@ -247,8 +247,7 @@ pipeline {
             steps {
                 script {
                     sshagent(credentials: ['1']) {
-                        sh 'ssh -o StrictHostKeyChecking=no root@10.10.11.10
-"cat /root/.ssh/id_rsa"'
+                        sh 'ssh -o StrictHostKeyChecking=no root@10.10.11.10 "cat /root/.ssh/id_rsa"'
                     }
                 }
             }
