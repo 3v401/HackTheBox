@@ -87,20 +87,20 @@ You will see the following outcome
 
 The outcome returned is a list of environment variables. At the end, the `help` command cannot interpretate `HOSTNAME=...`. So returns an error. Nonetheless, we obtain several paths and addresses.
 
-
-0. HOSTNAME=0f52c222a4ccJENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
-1. JAVA_HOME=/opt/java/openjdk
-2. JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
-3. COPY_REFERENCE_FILE_LOG=/var/jenkins_home/copy_reference_file.log
-4. PWD=/JENKINS_SLAVE_AGENT_PORT=50000
-5. JENKINS_VERSION=2.441
-6. HOME=/var/jenkins_home
-7. LANG=C.UTF-8
-8. JENKINS_UC=https://updates.jenkins.io
-9. SHLVL=0
-10. JENKINS_HOME=/var/jenkins_home
-11. REF=/usr/share/jenkins/ref
-12. PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+1. HOSTNAME=0f52c222a4cc
+2. JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
+3. JAVA_HOME=/opt/java/openjdk
+4. JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
+5. COPY_REFERENCE_FILE_LOG=/var/jenkins_home/copy_reference_file.log
+6. PWD=/JENKINS_SLAVE_AGENT_PORT=50000
+7. JENKINS_VERSION=2.441
+8. HOME=/var/jenkins_home
+9. LANG=C.UTF-8
+10. JENKINS_UC=https://updates.jenkins.io
+11. SHLVL=0
+12. JENKINS_HOME=/var/jenkins_home
+13. REF=/usr/share/jenkins/ref
+14. PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 Observe that we can analyze potential files in these environment variables, for exmaple, HOM, PATH, or JENKINS_HOME. Let' s try to find the user flag `user.txt` on these paths (I will only show the correct location to save time).
 
@@ -114,7 +114,13 @@ Remember you have to introduce the `user.txt` filename to read it because the vu
 
 ###Root flag
 
+There are no available root paths declared. Finding the root flag by brutte force is not a correct way to approach it. Also we don't know if we have admin privileges (which is very unlikely). SO the best way is to mimic that hostname in a container (such as Docker) and explore it. If the user left the files in the same way as in the default mode, it is very likely to find them in the same paths too.
 
+Why a Docker container?
+
+The hostname `0f52c222a4cc` is likely indicative of a containerized environment, specifically a Docker container. It serves as a unique identifier for the container, useful in various scenarios such as system identification, network communication, logging, monitoring, and automation within the context where the environment variable is set.
+
+So type in google "jenkins docker" and select the jenkins GitHub repository (I read the [documentation](https://www.jenkins.io/doc/book/installing/docker/) and not useful information on how to use it easily found).
 
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
 
