@@ -143,7 +143,18 @@ First command pulls a specific Docker image from Docker Hub. Second command runs
 3. `--restart=on-failure`: Ensures that the container will automatically restart if it crashes or exits with a non-zero status.
 4. `jenkins/jenkins:lts-jdk17`: The docker image that is going to be used for the container.
 
-   
+We have a password generated. So, now let's enter into this docker container. The container has been set up locally, so we should enter with `127.0.0.1` through port `8080` which is the one setled in the previous command. Open your browser and access `127.0.0.1:8080`
+
+(pic13)
+
+Introduce your generated password. Select `Select plugins to install` and unselect all marks in the list to accelerate the installation. Introduce Username, password and fullname in your configuration. Accept your default Jenkins URL.
+
+Now open a new terminal and run the following commands:
+
+1. `sudo docker ps -a`: To list all containers (running or not).
+2. `sudo start 4e`: To start the Docker container that beggins with 4e (yours will be different. Check your list of containers with the prevous command.
+3. `sudo docker exec 0it 4e bash`: Opens a terminal inside the running container that starts with 4e ID.
+
 
 
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
