@@ -236,7 +236,13 @@ We are in! Access "jennifer", "Credentials". You will see access to the `root` s
 
 (pic26)
 
+Check in installed plugins if ssh capability is added
 
+(pic27)
+
+Create a pipeline
+
+(pic28)
 
 
 ```
@@ -256,21 +262,16 @@ pipeline {
 }
 ```
 
+(pic29)
 
-?Nonetheless, we don' t find any example of how to implement it. So let's look on Google " CVE-2024-23897 proof of concept" and you will find the following site: https://github.com/3yujw7njai/CVE-2024-23897?
+Save and click on "Build Now". Open the logs, you will see the PRIVATE KEY
 
+(pic30)
 
+Save the PRIVATE KEY in a .txt file and launch the following command: `chmod 600 root_private_key.txt`
 
+`ssh -i root_private_key.txt root@10.10.11.10`
 
+(pic33)
 
-
-
-
-
-But how to get a client jenkins-cli.jar? Let' s type on google: "download the client jenkins-cli.jar" and select the Jenkins wiki (https://wiki.jenkins.io/JENKINS/Jenkins-CLI.html). You will observe the following statement:
-
-(pic4)
-
-So what we have to do is to connect to the jenkins server and add the additional URL to download:
-
-(pic3)
+Congratulations!  Now you have the root flag!
