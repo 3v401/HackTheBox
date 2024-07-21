@@ -142,27 +142,27 @@ docker pull jenkins/jenkins:lts-jdk17
 docker run -p 8080:8080 --restart=on-failure jenkins/jenkins:lts-jdk17
 ```
 
-First command pulls a specific Docker image from Docker Hub. Second command runs a Docker container using the Jenkins image that was pulled in the previous step.
+First command pulls a specific Docker image (jenkins:lts-jdk17) from Docker Hub. Second command runs a Docker container using the Jenkins image that was pulled in the previous step.
 1. `docker run`: Starts a new container from an image.
-2. `-p 8080:8080`: Maps the port 8080 from the host to port 8080 on the container. It makes Jenkins accessible via `http://<host-ip>:8080`.
+2. `-p 8080:8080`: Maps the port 8080 from the host to port 8080 on the container. It makes Jenkins container accessible via `http://<host-ip>:8080`.
 3. `--restart=on-failure`: Ensures that the container will automatically restart if it crashes or exits with a non-zero status.
 4. `jenkins/jenkins:lts-jdk17`: The docker image that is going to be used for the container.
 
 ![Alt text](pics/pic12.png)
 
-We have a password generated. So, now let's enter into this docker container. The container has been set up locally, so we should enter with `127.0.0.1` through port `8080` which is the one setled in the previous command. Open your browser and access `127.0.0.1:8080`
+We have a password generated (you will have another different). Let's enter into this docker container. The container has been set up locally, so we should enter with `127.0.0.1` through port `8080` which is the one setled in the previous command. Open your browser and access `127.0.0.1:8080`
 
-(pic13)
+![Alt text](pics/pic13.png)
 
-Introduce your generated password. Select `Select plugins to install` and unselect all marks in the list to accelerate the installation. Introduce Username, password and fullname in your configuration. Accept your default Jenkins URL.
-
-Now open a new terminal and run the following commands:
+Introduce your generated password. Select `Select plugins to install` and unselect all marks in the list to accelerate the installation (we want the most basic Jenkins Docker container to explore the directories). Introduce Username, password and fullname in your configuration. Accept your default Jenkins URL. Now open a new terminal and run the following commands:
 
 1. `sudo docker ps -a`: To list all containers (running or not).
 2. `sudo start 4e`: To start the Docker container that beggins with 4e (yours will be different. Check your list of containers with the prevous command.
 3. `sudo docker exec -it 4e bash`: Opens a terminal inside the running container that starts with 4e ID.
 
-(pic15)
+![Alt text](pics/pic15.png)
+
+##### Directory exploration
 
 At this point we must start thinking, what do we want? Obtaining the root flag. What do we aim for? The sudo password. Where can we find such sudo password? We know that in my docker container, the sudo password is `15a01c1cb3ce4abab9cc6e7976882c5d`. So it would be desirable to find a file that contains information `user:password`. These kind of files are usually named with the keyword "user, root, password...". I only show the first one:
 
