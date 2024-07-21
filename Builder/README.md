@@ -1,4 +1,11 @@
+## Contents
 
+1. Jenkins directory structure
+2. Containerization (Docker)
+4. Exploitation of [CVE-2024-23897](https://nvd.nist.gov/vuln/detail/CVE-2024-23897)
+5. Privilege Escalation
+
+## Tutorial
 
 Let's start scanning the ports. Type:
 
@@ -6,15 +13,13 @@ Let's start scanning the ports. Type:
 nmap -p- --min-rate=1000 -T4 -sV -sC 10.10.11.10
 ```
 
-The --min-rate=1000 option in nmap is used to specify the minimum number of packets sent per second during the scan. This is particularly useful for speeding up the scan, especially when dealing with a large number of ports (like when scanning all 65,535 TCP ports)
-
-Comparison with Other Timing Templates
+The --min-rate=1000 option in nmap is used to specify the minimum number of packets sent per second during the scan. This is particularly useful for speeding up the scan, especially when dealing with a large number of ports (like when scanning all 65,535 TCP ports). The "T" label stands for "timing". Each timing has its own level of aggresivity.
 
     -T0 (Paranoid): Extremely slow and stealthy, used to avoid detection by IDS/IPS systems.
-    -T1 (Sneaky): Very slow and stealthy, similar to -T0 but slightly faster.
-    -T2 (Polite): Slow but polite, waits longer between sending packets to avoid causing disruption.
+    -T1 (Sneaky): Similar to -T0 but slightly faster.
+    -T2 (Polite): Waits longer between sending packets to avoid causing disruption.
     -T3 (Normal): Default setting, balances speed and performance without being too aggressive.
-    -T4 (Aggressive): Faster than the default, uses shorter timeouts and more parallelism.
+    -T4 (Aggressive): Faster than default, uses shorter timeouts and more parallelism.
     -T5 (Insane): Extremely fast and aggressive, can overwhelm networks and be detected easily.
 
 (pic1)
