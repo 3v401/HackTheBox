@@ -122,13 +122,13 @@ java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/var/jenkins_home/
 
 ![Alt text](pics/pic10-1.png)
 
-Remember you have to introduce the `user.txt` filename to read it because the vulnerability reads files, not directories. Usually user flags are located in $HOME directory in HTB.
+You found the user flag! Remember you have to introduce the `user.txt` filename to read it because the vulnerability reads files, not directories. Usually user flags are located in $HOME directory in HTB.
 
-### Root flag
+### Root flag (Privilege Escalation)
 
-There are no available root paths declared. Finding the root flag by brutte force is not a correct way to approach it. Also we don't know if we have admin privileges (which is very unlikely). SO the best way is to mimic that hostname in a container (such as Docker) and explore it. If the user left the files in the same way as in the default mode, it is very likely to find them in the same paths too.
+There are no available root paths declared in our list of 14 variables. Finding the root flag by brutte force is not a correct way to approach it (we also don't have admin credentials). Exploring the Jenkins Directory by brute force is not a smart move. A good idea would be to design a minimal one (locally) and explore the directories to see if we can find something interesting on the server later like configuration files, usernames, passwords... The best way is to mimic this Jenkins server is with a container and explore it. We will use Docker.
 
-Why a Docker container?
+##### Why a Docker container?
 
 The hostname `0f52c222a4cc` is likely indicative of a containerized environment, specifically a Docker container. It serves as a unique identifier for the container, useful in various scenarios such as system identification, network communication, logging, monitoring, and automation within the context where the environment variable is set.
 
