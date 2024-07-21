@@ -240,7 +240,14 @@ We saw with nmap that the Jenkins server has an open ssh connection (therefore w
 
 Create a pipeline from Dashboard. Now we must ask ourselves how must be the pipeline to retrieve the ssh PRIVATE KEY. A good way to start is looking on the internet for "jenskins example pipeline ssh" and access the [stack overflow post](https://stackoverflow.com/questions/44237417/how-do-i-use-ssh-in-a-jenkins-pipeline).
 
-We must modify this pipeline at our needs.
+We must modify this pipeline at our needs. We must know that the URL shows an older declarative Jenkins pipeline syntax. We mus update the pipeline in a more modern way:
+
+1. We use now declarative syntax to make it easier to read and understand the pipeline structure
+2. Structured `stages` and `steps` defined clearly within the pipeline to break the pipeline in distinct parts
+3. Define `agent any` to run the pipeline on any available agent. It ensures the pipeline ca nrun on any node that has the necessary configuration.
+4. `script` block inserts the script we want to inject
+5. `sshagent` block specifies the credentials for the ssh connection. `credentials` parameter takes an array of credentials.
+6. `ssh command` connects to the remote host and prints `id_rsa` file. The `-o StrictHostKeyChecking=no` option is used to bypass host key checking.
 
 ```
 pipeline {
