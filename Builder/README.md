@@ -130,30 +130,25 @@ There are no available root paths declared in our list of 14 variables. Finding 
 
 ##### Why a Docker container?
 
-The hostname `0f52c222a4cc` is likely indicative of a containerized environment, specifically a Docker container. It serves as a unique identifier for the container, useful in various scenarios such as system identification, network communication, logging, monitoring, and automation within the context where the environment variable is set.
-
-So type in google "jenkins docker" and select the jenkins GitHub repository (I read the [documentation](https://www.jenkins.io/doc/book/installing/docker/) and not useful information on how to use it easily found). Access the Jenkins [GitHub](https://github.com/jenkinsci/docker) repository.
-
-First, we need to install docker. For that type: `sudo apt install docker.io`
-
-Let's setup the Docker container for Jenkins. Type:
+The HOSTNAME variable `0f52c222a4cc` is likely an ID of a containerized environment, specifically a Docker container. It serves as a unique identifier for the container. So type search on the internet "jenkins docker" and select the jenkins GitHub repository (I read the [documentation](https://www.jenkins.io/doc/book/installing/docker/) and not useful information on how to use it easily found). Access the Jenkins [GitHub](https://github.com/jenkinsci/docker) repository. First, we need to install docker. For that type: `sudo apt install docker.io` Now let's setup the Docker container for Jenkins. Type:
 
 ```
 docker pull jenkins/jenkins:lts-jdk17
 ```
 
-(pic11)
+![Alt text](pics/pic11.png)
 
 ```
 docker run -p 8080:8080 --restart=on-failure jenkins/jenkins:lts-jdk17
 ```
-(pic12)
 
 First command pulls a specific Docker image from Docker Hub. Second command runs a Docker container using the Jenkins image that was pulled in the previous step.
 1. `docker run`: Starts a new container from an image.
 2. `-p 8080:8080`: Maps the port 8080 from the host to port 8080 on the container. It makes Jenkins accessible via `http://<host-ip>:8080`.
 3. `--restart=on-failure`: Ensures that the container will automatically restart if it crashes or exits with a non-zero status.
 4. `jenkins/jenkins:lts-jdk17`: The docker image that is going to be used for the container.
+
+![Alt text](pics/pic12.png)
 
 We have a password generated. So, now let's enter into this docker container. The container has been set up locally, so we should enter with `127.0.0.1` through port `8080` which is the one setled in the previous command. Open your browser and access `127.0.0.1:8080`
 
