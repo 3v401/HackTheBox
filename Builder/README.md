@@ -7,6 +7,8 @@
 
 ## Tutorial
 
+### Scanning and Reconnaissance
+
 Let's start scanning the ports. Type:
 
 ```
@@ -34,20 +36,20 @@ Before scrolling and visiting sections, we have to detect the software version t
 
 #### Jenkins
 
-[Jenkins](https://en.wikipedia.org/wiki/Jenkins_(software)) is a tool for automating the software development process, from code integration and testing to deployment. Its extensibility and integration capabilities make it a popular choice for teams practicing DevOps and agile methodologies.
+[Jenkins](https://en.wikipedia.org/wiki/Jenkins_(software)) is a tool for automating the software development process from code integration and testing to deployment. Its extensibility and integration capabilities make it a popular choice for teams practicing DevOps and agile methodologies.
 
-When you access the webpage at `http://10.10.11.8:8080` on your Linux server and see that it uses Jenkins, it means that Jenkins is installed and running on that server. The Jenkins web interface is being served on port 8080, allowing you to interact with Jenkins through your web browser.
+When you access the webpage at `http://10.10.11.8:8080` and observe that the Linux server (pic1) uses Jenkins (pic2), it means that Jenkins is installed and running on that server. The Jenkins web interface is being served on port 8080, allowing you to interact with Jenkins through your web browser. How do we interact with the server through Jenkins? And more important, is there a vulnerability for Jenkins 2.441?
 
-So, if you can interact with Jenkins to the server, let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find the following [URL](https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314)
+Let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find the following [URL](https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314) on the Jenkins documentation.
+
+##### Vulnerability explained
 
 `Arbitrary file read vulnerability through the CLI can lead to RCE`. RCE stands for Remote Code Execution.
-It states that Jenkins has a built-in command line interface (CLI) to access Jenkins from a script or shell environment. Jenkins uses the `args4j` library to parse command arguments and options on the Jenkins controller when processing CLI commands. This command parser has a feature that replaces an `@` character followed by a file path in an argument with the file’s contents (`expandAtFiles`). This feature is enabled by default and Jenkins 2.441 and earlier, LTS 2.426.2 and earlier does not disable it.
+The documentation states that Jenkins has a built-in command line interface (CLI) to access Jenkins from a script or shell environment (we will use shell environment). Jenkins uses the `args4j` library to parse command arguments and options on the Jenkins controller when processing CLI commands. This command parser (args4j library) has a feature that replaces an `@` character followed by a file path in an argument with the file’s contents (`expandAtFiles`). This feature is enabled by default and Jenkins 2.441 and earlier, LTS 2.426.2 and earlier does not disable it.
 
-So, how do we get a Jenkins CLI? Typing on Google `get jenkins cli` we access the Jenkins documentation, read the description and access to section [Downloading the client](https://www.jenkins.io/doc/book/managing/cli/#downloading-the-client), which is what we want to interact with the server.
+So, how do we get a Jenkins CLI? Search on the internet `get jenkins cli`, access the Jenkins documentation, read the description and access to section [Downloading the client](https://www.jenkins.io/doc/book/managing/cli/#downloading-the-client), which is what we want to interact with the server. The documentation states that the CLI client can be downloaded directly from a Jenkins controller at the URL `/jnlpJars/jenkins-cli.jar`, in effect `JENKINS_URL/jnlpJars/jenkins-cli.jar`. So we connect to the host server and introduce such URL:
 
-The documentation states that the CLI client can be downloaded directly from a Jenkins controller at the URL /jnlpJars/jenkins-cli.jar, in effect `JENKINS_URL/jnlpJars/jenkins-cli.jar`. So we connect to the host server and introduce such URL:
-
-(pic3)
+![Alt text](pics/pic3.png)
 
 Now that we have the Jenkins-CLI, how do we use Jenkins-CLI? How do we insert the payload into the webserver?
 
