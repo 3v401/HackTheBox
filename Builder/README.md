@@ -180,36 +180,34 @@ What is this? Well, first we must know a bit about .xml files. The first line sp
 
 ![Alt text](pics/pic18.png)
 
-The `config.xml` file in Jenkins for the user "kali" holds detailed configuration information for that specific user. It includes the user’s ID and full name, as well as various properties and settings. These properties manage user preferences. It also contains user-specific security details like the encrypted password and API tokens.
+The `config.xml` file for the user "kali" holds detailed configuration information for that specific user. It includes the user’s ID and full name, as well as various properties and settings. These properties manage user preferences. It also contains user-specific security details like the encrypted password and API tokens. The password stored in this file is encrypted using `bcrypt`, a hashing algorithm designed to securely hash passwords. This ensures that even if someone gains access to the `config.xml` file, they cannot easily retrieve the plaintext password. Nonetheless, we can easily decrypt it with [John the Ripper](https://en.wikipedia.org/wiki/John_the_Ripper).
 
-The password stored in this file is encrypted using bcrypt, a hashing algorithm designed to securely hash passwords. This ensures that even if someone gains access to the config.xml file, they cannot easily retrieve the plaintext password. Nonetheless, we can easily decrypt it with [John the Ripper](https://en.wikipedia.org/wiki/John_the_Ripper).
+We got the list of users with `cat /var/jenkins_home/users/users.xml`. Let' s see what happens if er inject this command into our target server.
 
-So we got the list of users with `cat /var/jenkins_home/users/users.xml`. Let' s see what happens if er inject this command into our target.
-
-(pic19)
+![Alt text](pics/pic19.png)
 
 It looks like we don' t see all the content. Nonetheless, jenkins-cli.jar has several commands. We only attempted help. Also, when you run `java -jar jenkins-cli.jar` you get the following outcome:  `The available commands depend on the server. Run the 'help' command to see the list.`. So type: `java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help`.
 
-(pic20)
+![Alt text](pics/pic20.png)
 
-You will get an enormous list of commands to try (more than 15). Trying all of them is a crazy task, so I made a script to test all of them with the same command. The structure of the command is:
+You will get an enormous list of commands to try (more than 15). Observe that they are the same environment variables that we saw with `java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help"@/proc/self/environ`. Trying all of them by hand is a crazy task, so I made a script to test all of them with the same command. The structure of the command is:
 
 ```
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' [COMMAND] "@/var/jenkins_home/users/users.xml"
 ```
 
-If you want to get the script you can get it in the repository for Builder. The script showed that the `connect-node` command gives the content of all the file. So type:
+If you want to get the script you can get it [here](https://github.com/3v401/HackTheBox/blob/main/Builder/command_tester_jenkins.py). The script showed that the `connect-node` command gives the content of all the file. So type:
 
 ```
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' connect-node "@/var/jenkins_home/users/users.xml"
 ```
-(pic21)
 
-We got the username of our target Jenkins Docker!
+![Alt text](pics/pic21.png)
 
-So, there must be a user called `jennifer_12108429903186576833`. Let's search for it the same way we searched for `kali_XXXX`.
 
-(pic22)
+We got the username of our target containerized server! So, there must be a user called `jennifer_12108429903186576833`. Let's search for it the same way we searched for `kali_XXXX`.
+
+![Alt text](pics/pic22.png)
 
 As expected, we found the same file in the same location. The developer didn' t change the path. Everything remained as efault.
 
