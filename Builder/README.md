@@ -1,3 +1,11 @@
+
+
+Let's start scanning the ports. Type:
+
+```
+nmap -p- --min-rate=1000 -T4 -sV -sC 10.10.11.10
+```
+
 The --min-rate=1000 option in nmap is used to specify the minimum number of packets sent per second during the scan. This is particularly useful for speeding up the scan, especially when dealing with a large number of ports (like when scanning all 65,535 TCP ports)
 
 Comparison with Other Timing Templates
