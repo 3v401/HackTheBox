@@ -75,9 +75,9 @@ From here we can infere that the injection should be something like `Jenkins-CLI
 java -jar jenkins-cli.jar -s http://<JENKINS_SERVER>:8080 help "@/etc/passwd"
 ```
 
-Why the path `/etc/passwd`? Searching the `/etc/passwd` file on a Unix or Linux system is crucial for both administrative and security purposes because it contains vital information about all user accounts on the system. This file lists usernames, user IDs, group IDs, home directories, and default shells for each user, though it does not contain actual passwords, which are stored in `/etc/shadow` (we will check it later). For system administrators, `/etc/passwd` is essential for managing user accounts and auditing the system to identify any unusual or unauthorized entries. From a security perspective, attackers often target this file during reconnaissance to gather information about user accounts, which can be used for privilege escalation, targeted password attacks, and other exploitative activities. Understanding the details and configurations of user accounts helps both in maintaining system integrity and in identifying potential security vulnerabilities.
+Why the path `/etc/passwd`? We could search for other filepaths. Searching the `/etc/passwd` file on a Unix or Linux system is crucial for both administrative and security purposes because it contains vital information about all user accounts on the system. This file lists usernames, user IDs, group IDs, home directories, and default shells for each user, though it does not contain actual passwords, which are stored in `/etc/shadow` (we will check it later). For system administrators, `/etc/passwd` is essential for managing user accounts and auditing the system to identify any unusual or unauthorized entries. From a security perspective, attackers often target this file during reconnaissance to gather information about user accounts, which can be used for privilege escalation, targeted password attacks, and other exploitative activities.
 
-(pic7)
+![Alt text](pics/pic7.png)
 
 In this picture, we attempted to use the Jenkins CLI to read the /etc/passwd file by passing it as an argument to the help command. In Unix-like systems, @filename can be used to pass the contents of filename as an argument, and as a result, the contents of /etc/passwd were read and passed to the help command.
 
