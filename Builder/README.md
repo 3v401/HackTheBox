@@ -164,9 +164,9 @@ Introduce your generated password. Select `Select plugins to install` and unsele
 
 ##### Directory exploration
 
-At this point we must start thinking, what do we want? Obtaining the root flag. What do we aim for? The sudo password. Where can we find such sudo password? We know that in my docker container, the sudo password is `15a01c1cb3ce4abab9cc6e7976882c5d`. So it would be desirable to find a file that contains information `user:password`. These kind of files are usually named with the keyword "user, root, password...". I only show the first one:
+At this point we must think: We are in a simulated Jenkins Docker container (like our target). We got the user flag. What do we want? Obtaining root privileges. We need the sudo password. Where can we find such sudo password? We know that in my docker container, the sudo password is `15a01c1cb3ce4abab9cc6e7976882c5d`. So it would be desirable to find a file that contains information `user:password`. These kind of files are usually named with the keyword "user, root, password...". I only show the first one:
 
-(pic16)
+![Alt text](pics/pic16.png)
 
 These files are usually for:
 1. user.svg, new-user.svg, computer-user-offline.svg: Icon or image files used in the Jenkins web interface.
@@ -174,13 +174,11 @@ These files are usually for:
 
 `.xml` files are used for: Data storage, configuration, data exchange or document formatting. In Jenkins, .xml files often store configuration settings, user data, and job definitions. Let' s open users.xml
 
-(pic17)
+![Alt text](pics/pic17.png)
 
-What is this? Well, first we must know a bit about .xml files. The first line specifies the XML version and character encoding. Third line the version of the user ID mapping format. The next part is the ID to Directory Name Map (Maps user IDs to their corresponding directory names), for example, here, the file is used by Jenkins to map user ID "kali" to a unique directory name for storing user-specific data (kali_5195686553352608093).
+What is this? Well, first we must know a bit about .xml files. The first line specifies the XML version and character encoding. Third line the version of the user ID mapping format. The next part is the ID to Directory Name Map (Maps user IDs to their corresponding directory names), for example, here, the file is used by Jenkins to map user ID "kali" to a unique directory name for storing user-specific data (kali_5195686553352608093). So there must be a directory "kali_XXXX". We access the location of `users.xml` and observe that effectively, there was a folder with such name. Let's see its contents.
 
-So there must be a directory "kali_XXXX". We access the location of `users.xml` and observe that effectively, there was a folder with such name. Let's see its contents.
-
-(pic18)
+![Alt text](pics/pic18.png)
 
 The `config.xml` file in Jenkins for the user "kali" holds detailed configuration information for that specific user. It includes the user’s ID and full name, as well as various properties and settings. These properties manage user preferences. It also contains user-specific security details like the encrypted password and API tokens.
 
