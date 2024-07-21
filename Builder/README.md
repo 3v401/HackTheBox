@@ -40,7 +40,7 @@ Before scrolling and visiting sections, we have to detect the software version t
 
 When you access the webpage at `http://10.10.11.8:8080` and observe that the Linux server (pic1) uses Jenkins (pic2), it means that Jenkins is installed and running on that server. The Jenkins web interface is being served on port 8080, allowing you to interact with Jenkins through your web browser. How do we interact with the server through Jenkins? And more important, is there a vulnerability for Jenkins 2.441?
 
-Let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find the following [URL](https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314) on the Jenkins documentation.
+Let's look for "Jenkins 2.441 vulnerability" on the internet. After a quick search we find the following [URL](https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314) on the Jenkins documentation. It makes reference to the vulnerability [CVE-2024-23897](https://nvd.nist.gov/vuln/detail/CVE-2024-23897).
 
 ##### Vulnerability explained
 
@@ -55,11 +55,13 @@ Now that we have the Jenkins-CLI, how do we use Jenkins-CLI? How do we insert th
 
 ##### How to use Jenkins-CLI
 
-The general syntax of using Jenkins-CLI.jar can be found [here](https://www.jenkins.io/doc/book/managing/cli/#using-the-client). The command should be:
+The general syntax of using Jenkins-CLI.jar can be found [here](https://www.jenkins.io/doc/book/managing/cli/#using-the-client). A general command should be:
 
 ```
 java -jar jenkins-cli.jar [-s JENKINS_URL] [global options...] command [command options...] [arguments...]
 ```
+
+Now that we know the general command structure. How do we modify it such that we inject a payload?
 
 ##### How to insert Payload into Jenkins 2.441
 
