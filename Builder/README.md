@@ -120,11 +120,11 @@ Observe that we can analyze potential files (user.txt, root.txt) in these enviro
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/var/jenkins_home/user.txt"
 ```
 
-(pic10)
+![Alt text](pics/pic10-1.png)
 
-Remember you have to introduce the `user.txt` filename to read it because the vulnerability is reading files, not paths. Usually user flags are located in $HOME directory in HTB.
+Remember you have to introduce the `user.txt` filename to read it because the vulnerability reads files, not directories. Usually user flags are located in $HOME directory in HTB.
 
-###Root flag
+### Root flag
 
 There are no available root paths declared. Finding the root flag by brutte force is not a correct way to approach it. Also we don't know if we have admin privileges (which is very unlikely). SO the best way is to mimic that hostname in a container (such as Docker) and explore it. If the user left the files in the same way as in the default mode, it is very likely to find them in the same paths too.
 
