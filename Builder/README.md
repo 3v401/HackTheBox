@@ -242,9 +242,6 @@ Create a pipeline from Dashboard. Now we must ask ourselves how must be the pipe
 
 We must modify this pipeline at our needs.
 
-![Alt text](pics/pic28.png)
-
-
 ```
 pipeline {
     agent any
@@ -261,6 +258,17 @@ pipeline {
     }
 }
 ```
+
+We can't know the exact location of the PRIVATE KEY. Doing several attempts of this pipeline is the best methodology to find it. I share the final location of the PRIVATE KEY in the pipeline above. I first searched for the `/root/` folder
+
+![Alt text](pics/pic28-1.png)
+
+and later for the `.ssh` folder with its content. We found that the PRIVATE KEY was lovated in `id_rsa`.
+
+![Alt text](pics/pic28-2.png)
+
+![Alt text](pics/pic28.png)
+
 
 Save and click on "Build Now". 
 
