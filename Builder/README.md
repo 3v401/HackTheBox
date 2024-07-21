@@ -124,7 +124,7 @@ java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/var/jenkins_home/
 
 You found the user flag! Remember you have to introduce the `user.txt` filename to read it because the vulnerability reads files, not directories. Usually user flags are located in $HOME directory in HTB.
 
-### Root flag (Privilege Escalation)
+### Root flag
 
 There are no available root paths declared in our list of 14 variables. Finding the root flag by brutte force is not a correct way to approach it (we also don't have admin credentials). Exploring the Jenkins Directory by brute force is not a smart move. A good idea would be to design a minimal one (locally) and explore the directories to see if we can find something interesting on the server later like configuration files, usernames, passwords... The best way is to mimic this Jenkins server is with a container and explore it. We will use Docker.
 
@@ -209,7 +209,7 @@ We got the username of our target containerized server! So, there must be a user
 
 ![Alt text](pics/pic22.png)
 
-As expected, we found the same file in the same location. The developer didn' t change the path. Everything remained as efault.
+As expected, we found the same file in the same location. The developer didn' t change the path. Everything remained as default.
 
 1. email address: `jennifer@builder.htb`
 2. seed: `6841d11dc1de101d`
@@ -220,24 +220,19 @@ We can decipher the password quickly with John the Ripper:
 (insert command johntheripper and screenshot)
 (pic23, pending to do the screenshot)
 
-The password is princess.
+The password is `princess` (this is the equivalent of the password you settled when creating a jenkins docker container in the browser with your username and password).
 
-### Privilege Escalation
+#### Privilege Escalation
 
-Hold on! So we have the user `jennifer` and the password `princess`. We could try:
+Hold on! So we have the user `jennifer` and the password `princess`. We could try to log in the jenkins server (browser) with user and password. `jenkins-cli.jar` cannot make effective sudo-su commands, only reading files. Let's try loggin in the platform.
 
-1. Log in the platform with user and password
-2. Create a reverse shell and use sudo-su
+![Alt text](pics/pic24.png)
 
-`jenkins-cli.jar` cannot make effective sudo-su commands. Let's try loggin in the platform.
+![Alt text](pics/pic25.png)
 
-(pic24)
+We are in! Searching around the platform, you can access "jennifer", "Credentials". You will see access to the `root` system through ssh.
 
-(pic25)
-
-We are in! Access "jennifer", "Credentials". You will see access to the `root` system through ssh.
-
-(pic26)
+![Alt text](pics/pic26.png)
 
 Check in installed plugins if ssh capability is added
 
