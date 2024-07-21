@@ -79,14 +79,9 @@ Why the path `/etc/passwd`? We could search for other filepaths. Searching the `
 
 ![Alt text](pics/pic7.png)
 
-In this picture, we attempted to use the Jenkins CLI to read the /etc/passwd file by passing it as an argument to the help command. In Unix-like systems, @filename can be used to pass the contents of filename as an argument, and as a result, the contents of /etc/passwd were read and passed to the help command.
+In this picture, we attempted to use the Jenkins CLI to read the `/etc/passwd` file by passing it as an argument to the help command. The help command interpreted the contents of `/etc/passwd` as multiple arguments, leading to the error message: `ERROR: Too many arguments: daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin`. This line is the first line from `/etc/passwd`, showing the entry for the `daemon` user. The `daemon` user on Unix-like systems is a special system account used to run background services (daemons). It typically has limited permissions and is not intended for interactive login. This account helps in organizing and running system processes securely without giving them root privileges. There is also presence of the `root` user. The structure `root:x:0:0:root:/root:/bin/bash` from `/etc/passwd` provides some details about the root user account, for example `bin/bash` as shell. Let' s see the `/etc/shadow` to find the password:
 
-The help command interpreted the contents of `/etc/passwd` as multiple arguments, leading to the error message: ERROR: Too many arguments: daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin. This line is the first line from /etc/passwd, showing the entry for the daemon user. The daemon user on Unix-like systems is a special system account used to run background services (daemons). It typically has limited permissions and is not intended for interactive login. This account helps in organizing and running system processes securely without giving them root privileges.
-There is also presence of the root user. The structure `root:x:0:0:root:/root:/bin/bash` from /etc/passwd provides key details about the root user account: the username (root), a placeholder indicating the password is stored in /etc/shadow (x), the user ID (0), the group ID (0), the GECOS field with user info (root), the home directory (/root), and the default shell (/bin/bash). This format helps the system manage user accounts, with each field separated by colons.
-
-The CLI misinterpreted the file content as multiple arguments due to the way the help command processes its input. Let' s see the /etc/shadow to find the password:
-
-(pic8)
+![Alt text](pics/pic8.png)
 
 No contents for `java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/etc/shadow"`.
 
