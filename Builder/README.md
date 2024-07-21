@@ -234,13 +234,15 @@ We are in! Searching around the platform, you can access "jennifer", "Credential
 
 ![Alt text](pics/pic26.png)
 
-Check in installed plugins if ssh capability is added
+We saw with nmap that the Jenkins server has an open ssh connection (therefore we can communicate with the server through ssh), it has a root ssh PRIVATE KEY on the platform. Is there a way to retrieve this PRIVATE KEY? Yes, we could run a job on Jenkins platform with jennifer's account (i.e., running a pipeline) to print the PRIVATE KEY of the root user for ssh connection. The question is, does Jennifer have admin privileges to access `/root/.ssh`? We will check this. First we must verify if installed plugins for ssh capability are added (you see that they are).
 
-(pic27)
+![Alt text](pics/pic27.png)
 
-Create a pipeline
+Create a pipeline from Dashboard. Now we must ask ourselves how must be the pipeline to retrieve the ssh PRIVATE KEY. A good way to start is looking on the internet for "jenskins example pipeline ssh" and access the [stack overflow post](https://stackoverflow.com/questions/44237417/how-do-i-use-ssh-in-a-jenkins-pipeline).
 
-(pic28)
+We must modify this pipeline at our needs.
+
+![Alt text](pics/pic28.png)
 
 
 ```
@@ -260,16 +262,18 @@ pipeline {
 }
 ```
 
-(pic29)
+Save and click on "Build Now". 
 
-Save and click on "Build Now". Open the logs, you will see the PRIVATE KEY
+![Alt text](pics/pic29.png)
 
-(pic30)
+Open the logs, you will see the PRIVATE KEY
+
+![Alt text](pics/pic30.png)
 
 Save the PRIVATE KEY in a .txt file and launch the following command: `chmod 600 root_private_key.txt`
 
 `ssh -i root_private_key.txt root@10.10.11.10`
 
-(pic33)
+![Alt text](pics/pic33.png)
 
-Congratulations!  Now you have the root flag!
+Congratulations! 🥳 Now you have the root flag!
