@@ -194,13 +194,25 @@ It looks like we don' t see all the content. Nonetheless, jenkins-cli.jar has se
 
 ![Alt text](pics/pic20.png)
 
-You will get an enormous list of commands to try (more than 15). Observe that they are the same environment variables that we saw with `java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help"@/proc/self/environ`. Trying all of them by hand is a crazy task, so I made a script to test all of them with the same command. The structure of the command is:
+You will get an enormous list of commands to try (more than 15). Observe that they are the same environment variables that we saw with `java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' help "@/proc/self/environ`. Trying all commands by hand is a crazy task, so I made a script to test all of them. The structure of the command is:
 
 ```
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' [COMMAND] "@/var/jenkins_home/users/users.xml"
 ```
 
-If you want to get the script you can get it [here](https://github.com/3v401/HackTheBox/blob/main/Builder/command_tester_jenkins.py). The script showed that the `connect-node` command gives the content of all the file. So type:
+If you want to get the script you can get it [here](https://github.com/3v401/HackTheBox/blob/main/Builder/command_tester_jenkins.py). The script executed commands that resturned only one line of the file, others nothing from the file, and others the complete document. The commands that showed the complete file are: `connect-node`, `delete-job`, `delete-node`, `delete-view`, `disconnect-node`, `offline-node`, `online-node` and `reload-job` command gives the content of all the file. Here you have 2 screenshots of the execution of the code
+
+![Alt text](pics/pic10-2.png)
+
+Previous picture shows how to execute the program, first the template command to try, second the direction of the file you want to analyse. Returns the commands of that program and executes them iteratively.
+
+![Alt text](pics/pic10-3.png)
+
+`add-job-to-view`, `build`, `cancel-quiet-down`... don't return content.
+
+![Alt text](pics/pic10-4.png)
+
+`connect-node` is the first command that returns content. So type:
 
 ```
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' connect-node "@/var/jenkins_home/users/users.xml"
