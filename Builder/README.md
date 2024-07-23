@@ -200,7 +200,7 @@ You will get an enormous list of commands to try (more than 15). Observe that th
 java -jar jenkins-cli.jar -s 'http://10.10.11.10:8080' [COMMAND] "@/var/jenkins_home/users/users.xml"
 ```
 
-If you want to get the script you can get it [here](https://github.com/3v401/HackTheBox/blob/main/Builder/command_tester_jenkins.py). The script executed commands that resturned only one line of the file, others nothing from the file, and others the complete document. The commands that showed the complete file are: `connect-node`, `delete-job`, `delete-node`, `delete-view`, `disconnect-node`, `offline-node`, `online-node` and `reload-job` command gives the content of all the file. Here you have 2 screenshots of the execution of the code
+If you want to get the script you can get it [here](https://github.com/3v401/HackTheBox/blob/main/Builder/command_tester_jenkins.py). The script executed commands that returned only one line of the file, others nothing from the file, and others the complete document. The commands that showed the complete file are: `connect-node`, `delete-job`, `delete-node`, `delete-view`, `disconnect-node`, `offline-node`, `online-node` and `reload-job` command gives the content of all the file. Here you have 2 screenshots of the execution of the code
 
 ![Alt text](pics/pic10-2.png)
 
