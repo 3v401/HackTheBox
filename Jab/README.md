@@ -1,1 +1,15 @@
+To obtain the list of open ports run the following command:
 
+```
+ports=$(nmap -p- --min-rate=1000 -T3 10.10.11.4 | grep '^[0-9]' | cut -d '/' -f 1 | tr '\n' ',' | sed s/,$//)
+```
+
+You will obtain the following list of commands
+
+(pic1)
+
+If you run `nmap -p$ports -sV 10.10.11.4` after the previous port retrieve, nmap will return a negative response appearing to be `10.10.11.4` down or blocking ICMP (ping) probes. When `nmap` doesn't receive a response to its ping probes, it assumes the host is down and doesn't proceed with the port scan.
+
+Administrators often configure servers to ignore or block ICMP (ping) requests as a security measure to make the server less detectable and harder to probe by potential attackers. This technique is known as `stealth` or `cloaking` the server. This is done to reduce exposure, prevent reconnaissance, or mitigate DDOs attacks.
+
+To analyse even when the server is in `stealth` mode run:
