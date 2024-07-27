@@ -13,3 +13,9 @@ If you run `nmap -p$ports -sV 10.10.11.4` after the previous port retrieve, nmap
 Administrators often configure servers to ignore or block ICMP (ping) requests as a security measure to make the server less detectable and harder to probe by potential attackers. This technique is known as `stealth` or `cloaking` the server. This is done to reduce exposure, prevent reconnaissance, or mitigate DDOs attacks.
 
 To analyse even when the server is in `stealth` mode run:
+
+```
+nmap -p$ports -sV -Pn 10.10.11.4
+```
+
+(pic2)
