@@ -21,3 +21,9 @@ nmap -p$ports -sV -Pn 10.10.11.4
 (pic2)
 
 From this scan, it can be inferred that the host is a Windows machine that runs various network services, including DNS, Kerberos (authentication), LDAP (directory services), and RPC (remote procedure calls for interprocess communication), among others. The presence of Active Directory services and multiple RPC services suggests the machine is a server within a Windows domain environment, likely performing several roles related to network and user management. The variety of open ports and services could indicate a well-utilized server, possibly used in a corporate or enterprise setting.
+
+Locally resolve the address:
+
+(pic3)
+
+Locally resolving the address means mapping a human-readable domain name (hostname) to an IP address on your local machine. This allows your computer to recognize and connect to a specific server or service using a more memorable hostname instead of a numerical IP address.
