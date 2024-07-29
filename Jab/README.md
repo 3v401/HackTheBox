@@ -40,7 +40,7 @@ Now, after explaining way XMPP is an easier way to vulnerate the machine, focus 
 1. Port 5269/tcp is used for server-to-server communication in XMPP. Wildfire was the former name of the Openfire XMPP server. The service identifies as "Wildfire XMPP Client" suggests that this is part of the Openfire server suite. The server might be participating in federated XMPP communication with other XMPP servers. This can be a target for attacks that exploit XMPP server-to-server communications.
 2. Port 5275/tcp is running an Openfire server with a version 3.10.0 or later. This helps in determining if there are any known vulnerabilities or exploits specific to that version of Openfire.
 
-Locally resolve the address:
+Before beginning the exploitation process, locally resolve the address:
 
 (pic3)
 
@@ -50,7 +50,6 @@ Locally resolving the address means mapping a human-readable domain name (hostna
 echo 10.129.230.215 jab.htb | sudo tee -a /etc/hosts
 ```
 
+#### XMPP
 
-
-Additionally, the previous scan reveals several open ports that are typically associated with XMPP (Extensible Messaging and Presence Protocol) services used for instant messaging, presence information, and other communication services. 
-
+[XMPP](https://en.wikipedia.org/wiki/XMPP) (Extensible Messaging and Presence Protocol), originally named Jabber, is an open communication protocol designed for instant messaging (IM), presence information, and contact list maintenance.
