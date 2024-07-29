@@ -30,7 +30,15 @@ Shall we focus on `MWRPC`, `XMPP`, `LDAP`...? MWRPC and XMPP are the most common
 2. **Openfire and XMPP in general might be better documented in terms of available exploits**, making it an easier target for initial access than a crucial Windows environment. Also, tools and scripts for exploiting XMPP services might be more readily available providing a quicker path to potential exploitation. Also, knowing the specific software version can guide attackers in researching known vulnerabilities and configuration issues, on the other hand, on MWRPC services no specific software versions were found.
 3. XMPP servers can disclose useful information about the server or the network environment. For example, they can reveal usernames, domain information, configuration details... If the XMPP service is poorly configured, it might allow unauthorized access or data extraction.
 
-The `nmap` scan result
+Now, after explaining way XMPP is an easier way to vulnerate the machine, focus on the following nmap output:
+
+```
+5269/tcp  open  xmpp                Wildfire XMPP Client
+5275/tcp  open  jabber              Ignite Realtime Openfire Jabber server 3.10.0 or later
+```
+
+1. Port 5269/tcp is used for server-to-server communication in XMPP. Wildfire was the former name of the Openfire XMPP server. The service identifies as "Wildfire XMPP Client" suggests that this is part of the Openfire server suite. The server might be participating in federated XMPP communication with other XMPP servers. This can be a target for attacks that exploit XMPP server-to-server communications.
+2. Port 5275/tcp is running an Openfire server with a version 3.10.0 or later. This helps in determining if there are any known vulnerabilities or exploits specific to that version of Openfire.
 
 Locally resolve the address:
 
