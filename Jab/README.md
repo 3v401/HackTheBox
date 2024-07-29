@@ -24,11 +24,13 @@ From this scan, it can be inferred that the host is a Windows machine that runs 
 
 Nonetheless, observe that the most common versions are `Microsoft Windows RPC` (9 entries) and `Wildfire XMPP Client` (2 entries). One could thing that **multiple open ports related to mwrpc imples that the target's infrastructure is highly dependent on this protocol**. This clustering of mwrpc-related ports strengthens the inference that this service is likely a critical component on the target system.
 
-Shall we focus on `MWRPC`, `XMPP`, `LDAP`...? mwrpc and XMPP are the most common used services, so the server is highly dependent on these services. To decide on which service to focus first we must think:
+Shall we focus on `MWRPC`, `XMPP`, `LDAP`...? MWRPC and XMPP are the most common used services, so the server is highly dependent on these tools. To decide on which to focus first we must think:
 
 1. XMPP servers (especially specific implementations like Openfire) can have known vulnerabilities or common misconfigurations that might be easier to exploit. In contrast, MSRPC (Microsoft Windows Remote Procedure Call) services are crucial and common in Windows environments and there might not be as many straightforward vulnerabilities. **Exploiting RPC services often require more specific conditions**.
-2. Openfire and XMPP in general might be better documented in terms of available exploits, making it an easier target for initial access than a crucial Windows environment. Also, tools and scripts for exploiting XMPP services might be more readily available providing a quicker path to potential exploitation.
+2. **Openfire and XMPP in general might be better documented in terms of available exploits**, making it an easier target for initial access than a crucial Windows environment. Also, tools and scripts for exploiting XMPP services might be more readily available providing a quicker path to potential exploitation. Also, knowing the specific software version can guide attackers in researching known vulnerabilities and configuration issues, on the other hand, on MWRPC services no specific software versions were found.
 3. XMPP servers can disclose useful information about the server or the network environment. For example, they can reveal usernames, domain information, configuration details... If the XMPP service is poorly configured, it might allow unauthorized access or data extraction.
+
+The `nmap` scan result
 
 Locally resolve the address:
 
