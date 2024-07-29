@@ -27,6 +27,8 @@ Nonetheless, observe that the most common versions are `Microsoft Windows RPC` (
 Shall we focus on `MWRPC`, `XMPP`, `LDAP`...? mwrpc and XMPP are the most common used services, so the server is highly dependent on these services. To decide on which service to focus first we must think:
 
 1. XMPP servers (especially specific implementations like Openfire) can have known vulnerabilities or common misconfigurations that might be easier to exploit. In contrast, MSRPC (Microsoft Windows Remote Procedure Call) services are crucial and common in Windows environments and there might not be as many straightforward vulnerabilities. **Exploiting RPC services often require more specific conditions**.
+2. Openfire and XMPP in general might be better documented in terms of available exploits, making it an easier target for initial access than a crucial Windows environment. Also, tools and scripts for exploiting XMPP services might be more readily available providing a quicker path to potential exploitation.
+3. XMPP servers can disclose useful information about the server or the network environment. For example, they can reveal usernames, domain information, configuration details... If the XMPP service is poorly configured, it might allow unauthorized access or data extraction.
 
 Locally resolve the address:
 
